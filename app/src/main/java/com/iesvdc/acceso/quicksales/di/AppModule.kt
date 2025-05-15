@@ -1,20 +1,14 @@
+// File: AppModule.kt
 package com.iesvdc.acceso.quicksales.di
 
 import android.content.Context
+import com.iesvdc.acceso.quicksales.data.datasource.network.FavoriteApi
 import com.iesvdc.acceso.quicksales.data.datasource.network.ProductApi
 import com.iesvdc.acceso.quicksales.data.datasource.network.UserApi
+import com.iesvdc.acceso.quicksales.data.repository.FavoriteRepository
 import com.iesvdc.acceso.quicksales.data.repository.ProductRepository
 import com.iesvdc.acceso.quicksales.data.repository.UserRepository
-import com.iesvdc.acceso.quicksales.domain.usercase.AddProductUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.DeleteProductUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.DepositUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.GetBalanceUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.GetOtherProductsUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.GetProductsUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.LogoutUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.PurchaseProductUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.UpdateProductUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.WithdrawUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,11 +20,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-
     @Provides
-    fun provideLogoutUseCase(@ApplicationContext context: Context): LogoutUseCase =
-        LogoutUseCase(context)
-
+    fun provideLogoutUseCase(@ApplicationContext ctx: Context): LogoutUseCase =
+        LogoutUseCase(ctx)
 
     @Provides @Singleton
     fun provideProductRepo(
@@ -38,22 +30,32 @@ object AppModule {
         @ApplicationContext ctx: Context
     ): ProductRepository = ProductRepository(api, ctx)
 
-    @Provides fun provideGetProductsUseCase(r: ProductRepository) = GetProductsUseCase(r)
-    @Provides fun provideAddProductUseCase(r: ProductRepository) = AddProductUseCase(r)
-    @Provides fun provideUpdateProductUseCase(r: ProductRepository) = UpdateProductUseCase(r)
-    @Provides fun provideDeleteProductUseCase(r: ProductRepository) = DeleteProductUseCase(r)
-    @Provides fun providePurchaseProductUseCase(r: ProductRepository) = PurchaseProductUseCase(r)
-    @Provides fun provideGetOtherProductsUseCase(r: ProductRepository) = GetOtherProductsUseCase(r)
-
-    @Provides fun provideGetBalanceUseCase(repo: UserRepository) = GetBalanceUseCase(repo)
-    @Provides fun provideDepositUseCase(repo: UserRepository)    = DepositUseCase(repo)
-    @Provides fun provideWithdrawUseCase(repo: UserRepository)   = WithdrawUseCase(repo)
-
     @Provides @Singleton
     fun provideUserRepository(
-        userApi: UserApi,
+        api: UserApi,
         @ApplicationContext ctx: Context
-    ): UserRepository = UserRepository(userApi, ctx)
+    ): UserRepository = UserRepository(api, ctx)
 
+    @Provides @Singleton
+    fun provideFavoriteRepository(
+        api: FavoriteApi
+    ): FavoriteRepository = FavoriteRepository(api)
 
+    // PRODUCT USE CASES
+    @Provides fun provideGetProductsUC(r: ProductRepository)      = GetProductsUseCase(r)
+    @Provides fun provideAddProductUC(r: ProductRepository)       = AddProductUseCase(r)
+    @Provides fun provideUpdateProductUC(r: ProductRepository)    = UpdateProductUseCase(r)
+    @Provides fun provideDeleteProductUC(r: ProductRepository)    = DeleteProductUseCase(r)
+    @Provides fun providePurchaseProductUC(r: ProductRepository)  = PurchaseProductUseCase(r)
+    @Provides fun provideGetOtherProductsUC(r: ProductRepository) = GetOtherProductsUseCase(r)
+
+    // WALLET USE CASES
+    @Provides fun provideGetBalanceUC(r: UserRepository) = GetBalanceUseCase(r)
+    @Provides fun provideDepositUC(r: UserRepository)    = DepositUseCase(r)
+    @Provides fun provideWithdrawUC(r: UserRepository)   = WithdrawUseCase(r)
+
+    // FAVORITE USE CASES
+    @Provides fun provideGetFavoritesUC(r: FavoriteRepository)   = GetFavoritesUseCase(r)
+    @Provides fun provideAddFavoriteUC(r: FavoriteRepository)    = AddFavoriteUseCase(r)
+    @Provides fun provideRemoveFavoriteUC(r: FavoriteRepository) = RemoveFavoriteUseCase(r)
 }

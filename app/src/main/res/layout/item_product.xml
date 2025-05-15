@@ -98,6 +98,7 @@
             android:background="@null"
             android:src="@mipmap/ic_comprar_foreground"/>
 
+
         <ImageButton
             android:id="@+id/favButton"
             android:layout_width="209dp"
@@ -106,15 +107,8 @@
             android:layout_gravity="bottom|start"
             android:layout_toStartOf="@id/textProductoPrice"
             android:background="@null"
-            android:src="@mipmap/ic_corazon_lleno" />
-        <ImageButton
-            android:id="@+id/favButton2"
-            android:layout_width="209dp"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom|start"
-            android:layout_toStartOf="@id/textProductoPrice"
-            android:background="@null"
-            android:src="@mipmap/ic_corazon_vacio" />
+            android:src="@mipmap/ic_corazon_vacio_foreground" />
+
+
     </FrameLayout>
 </androidx.cardview.widget.CardView>

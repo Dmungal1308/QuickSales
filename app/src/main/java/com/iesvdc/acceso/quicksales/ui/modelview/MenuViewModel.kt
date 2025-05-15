@@ -4,9 +4,12 @@ package com.iesvdc.acceso.quicksales.ui.modelview
 import android.app.Application
 import androidx.lifecycle.*
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.ProductResponse
+import com.iesvdc.acceso.quicksales.domain.usercase.AddFavoriteUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.GetFavoritesUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.GetOtherProductsUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.LogoutUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.PurchaseProductUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.RemoveFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.Normalizer
@@ -17,53 +20,63 @@ class MenuViewModel @Inject constructor(
     application: Application,
     private val getOtherProductsUseCase: GetOtherProductsUseCase,
     private val purchaseProductUseCase: PurchaseProductUseCase,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase,
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase,
     private val logoutUseCase: LogoutUseCase
 ) : AndroidViewModel(application) {
 
-    // Lista completa sin filtrar
     private val allProducts = mutableListOf<ProductResponse>()
-
-    // LiveData que expone la lista filtrada
     private val _products = MutableLiveData<List<ProductResponse>>()
     val products: LiveData<List<ProductResponse>> = _products
 
-    // LiveData para logout
+    private val favoriteIds = mutableSetOf<Int>()
+    private val _favoriteIdsLive = MutableLiveData<Set<Int>>()
+    val favoriteIdsLive: LiveData<Set<Int>> = _favoriteIdsLive
+
     private val _logoutEvent = MutableLiveData<Boolean>()
     val logoutEvent: LiveData<Boolean> = _logoutEvent
 
     init {
-        loadOthers()
+        loadData()
     }
 
-    /** Carga todos los productos ajenos y resetea filtro */
-    fun loadOthers() {
+    fun loadData() {
         viewModelScope.launch {
-            val list = getOtherProductsUseCase()
+            val prods = getOtherProductsUseCase()
+            val favs = getFavoritesUseCase().map { it.idProducto }
+            favoriteIds.clear()
+            favoriteIds.addAll(favs)
+            _favoriteIdsLive.value = favoriteIds
             allProducts.clear()
-            allProducts += list
-            _products.value = list
+            allProducts += prods
+            _products.value = allProducts
         }
     }
 
-    /**
-     * Filtra por nombre:
-     * - Ignora mayúsculas/minúsculas
-     * - Permite buscar con fragmentos
-     * - Elimina acentos
-     */
     fun filterByName(query: String) {
         val q = normalize(query.trim())
-        _products.value = if (q.isEmpty()) {
-            allProducts
-        } else {
-            allProducts.filter { normalize(it.nombre).contains(q) }
-        }
+        _products.value = if (q.isEmpty()) allProducts
+        else allProducts.filter { normalize(it.nombre).contains(q) }
     }
 
     fun purchase(product: ProductResponse) {
         viewModelScope.launch {
             purchaseProductUseCase(product.id)
-            loadOthers()
+            loadData()
+        }
+    }
+
+    fun toggleFavorite(product: ProductResponse) {
+        viewModelScope.launch {
+            if (favoriteIds.contains(product.id)) {
+                removeFavoriteUseCase(product.id)
+                favoriteIds.remove(product.id)
+            } else {
+                addFavoriteUseCase(product.id)
+                favoriteIds.add(product.id)
+            }
+            _favoriteIdsLive.value = favoriteIds
         }
     }
 
@@ -76,7 +89,6 @@ class MenuViewModel @Inject constructor(
         _logoutEvent.value = false
     }
 
-    /** Normaliza texto: descompone acentos y pasa a minúsculas */
     private fun normalize(text: String): String {
         val temp = Normalizer.normalize(text, Normalizer.Form.NFD)
         return temp.replace("\\p{M}".toRegex(), "").lowercase()

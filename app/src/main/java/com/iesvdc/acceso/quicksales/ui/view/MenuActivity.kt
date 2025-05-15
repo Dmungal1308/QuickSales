@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -23,87 +24,68 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MenuActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMenuBinding
     private lateinit var drawerLayout: DrawerLayout
-
     private val vm: MenuViewModel by viewModels()
-
-    private val adapter = ProductAdapter(
-        onDelete = {},   // deshabilitado aquí
-        onEdit   = {},   // deshabilitado aquí
-        onBuy    = { vm.purchase(it) }
-    )
+    private lateinit var adapter: ProductAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         drawerLayout = binding.drawerLayout
 
-        // status bar light
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = getColor(R.color.white)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
-
-        // inset padding
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { view, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        // en onCreate(), tras setup de "favoritos":
-        binding.root.findViewById<TextView>(R.id.cartera)
-            .setOnClickListener {
-                startActivity(Intent(this, WalletActivity::class.java))
-                drawerLayout.closeDrawer(GravityCompat.START)
-            }
 
-        binding.root.findViewById<TextView>(R.id.mis_productos)
-            .setOnClickListener {
-                startActivity(Intent(this, MisProductosActivity::class.java))
-                drawerLayout.closeDrawer(GravityCompat.START)
-            }
+        adapter = ProductAdapter(
+            onBuy = { vm.purchase(it) },
+            onToggleFavorite = { vm.toggleFavorite(it) }
+        )
 
-
-        // RecyclerView
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
-        // SearchView para filtrar en tiempo real
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                binding.searchView.clearFocus()
+            override fun onQueryTextSubmit(query: String?) = true.also {
                 vm.filterByName(query ?: "")
-                return true
             }
-            override fun onQueryTextChange(newText: String?): Boolean {
+            override fun onQueryTextChange(newText: String?) = true.also {
                 vm.filterByName(newText ?: "")
-                return true
             }
         })
 
-        // Drawer toggle
+        binding.root.findViewById<TextView>(R.id.cartera).setOnClickListener {
+            startActivity(Intent(this, WalletActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        binding.root.findViewById<TextView>(R.id.mis_productos).setOnClickListener {
+            startActivity(Intent(this, MisProductosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
         binding.imageButton.setOnClickListener { toggleDrawer() }
-        binding.root.findViewById<ImageButton>(R.id.botonFlecha).setOnClickListener { toggleDrawer() }
-        binding.root.findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
-
-        // Botón inferior “Inicio”
+        binding.root.findViewById<ImageButton>(R.id.botonFlecha)
+            .setOnClickListener { toggleDrawer() }
+        binding.root.findViewById<TextView>(R.id.cerrarSesion)
+            .setOnClickListener { showLogoutConfirmationDialog() }
         findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
             startActivity(Intent(this, MenuActivity::class.java))
         }
 
-        // Observadores
-        vm.products.observe(this) { adapter.submit(it) }
-        vm.logoutEvent.observe(this) { loggedOut ->
-            if (loggedOut) {
-                vm.resetLogoutEvent()
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-            }
-        }
+        vm.products.observe(this) { adapter.submitList(it) }
+        vm.favoriteIdsLive.observe(this) { adapter.setFavorites(it) }
+        vm.logoutEvent.observe(this) { if (it) {
+            vm.resetLogoutEvent()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        } }
     }
 
     private fun toggleDrawer() {
