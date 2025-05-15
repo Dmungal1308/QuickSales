@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "988334525253",
+    "project_id": "orgalife-bb834",
+    "storage_bucket": "orgalife-bb834.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:988334525253:android:89bfe7906c430527a68c2c",
+        "android_client_info": {
+          "package_name": "com.iesvdc.acceso.quicksales"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkPiTtJwgQC8q1oElLYuH6oJ2DgZvcQCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

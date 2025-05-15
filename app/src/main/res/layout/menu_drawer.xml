@@ -1,0 +1,167 @@
+<com.google.android.material.navigation.NavigationView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_view"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_inversePrimary_mediumContrast"
+    android:layout_gravity="start">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="0dp">
+
+        <!-- Botón Flecha (Cerrar Drawer) -->
+
+        <View
+            android:id="@+id/bgCircle1"
+            android:layout_width="257dp"
+            android:layout_height="246dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="416dp"
+            android:background="@drawable/circle_shape_white"
+            android:translationX="-150dp"
+            android:translationY="-60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/bgCircle2"
+            android:layout_width="257dp"
+            android:layout_height="246dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="304dp"
+            android:background="@drawable/circle_shape_white"
+            android:translationX="150dp"
+            android:translationY="-260dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/bgCircle3"
+            android:layout_width="157dp"
+            android:layout_height="167dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="304dp"
+            android:background="@drawable/circle_shape_white"
+            android:translationX="70dp"
+            android:translationY="-260dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/bgCircle4"
+            android:layout_width="157dp"
+            android:layout_height="167dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="304dp"
+            android:background="@drawable/circle_shape_white"
+            android:translationX="200dp"
+            android:translationY="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/bgCircle5"
+            android:layout_width="167dp"
+            android:layout_height="167dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="304dp"
+            android:background="@drawable/circle_shape_white"
+            android:translationX="50dp"
+            android:translationY="340dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/botonFlecha"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_flecha_foreground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Botón Usuario (A la derecha de la flecha) -->
+        <ImageButton
+            android:id="@+id/botonUsuario"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_logo_principal_foreground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/botonFlecha"
+            app:layout_constraintHorizontal_bias="1.0" />
+
+        <!-- Texto "Menú" -->
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Menú"
+            android:textSize="16dp"
+            android:textColor="@color/primario"
+            app:layout_constraintTop_toBottomOf="@id/botonFlecha"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="16dp"/>
+
+        <!-- Opción "Ejercicio" -->
+        <TextView
+            android:id="@+id/mis_productos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Mis productos"
+            android:textSize="16dp"
+            android:textColor="@color/primario"
+            app:layout_constraintTop_toBottomOf="@id/textView3"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="16dp"/>
+
+        <TextView
+            android:id="@+id/favoritos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Favoritos"
+            android:textSize="16dp"
+            android:textColor="@color/primario"
+            app:layout_constraintTop_toBottomOf="@id/mis_productos"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="16dp"/>
+
+        <TextView
+            android:id="@+id/cartera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Cartera"
+            android:textSize="16dp"
+            android:textColor="@color/primario"
+            app:layout_constraintTop_toBottomOf="@id/favoritos"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="16dp"/>
+
+        <!-- Cerrar Sesión (Fijado en la parte inferior) -->
+        <TextView
+            android:id="@+id/cerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar Sesión"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@color/error"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.navigation.NavigationView>

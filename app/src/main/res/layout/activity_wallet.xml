@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/wallet_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 1) DrawerLayout ocupa casi todo el alto -->
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- Contenido principal: tu diseño de cartera -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Círculos de fondo -->
+            <View
+                android:id="@+id/bgCircle"
+                android:layout_width="285dp"
+                android:layout_height="281dp"
+                android:background="@drawable/circle_shape"
+                android:translationX="-50dp"
+                android:translationY="-50dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/bgCircle2"
+                android:layout_width="219dp"
+                android:layout_height="211dp"
+                android:background="@drawable/circle_shape"
+                android:translationX="150dp"
+                android:translationY="90dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/bgCircle3"
+                android:layout_width="259dp"
+                android:layout_height="259dp"
+                android:background="@drawable/circle_shape"
+                android:translationX="200dp"
+                android:translationY="500dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/bgCircle4"
+                android:layout_width="211dp"
+                android:layout_height="211dp"
+                android:background="@drawable/circle_shape"
+                android:translationX="-150dp"
+                android:translationY="350dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Logo superior -->
+            <ImageButton
+                android:id="@+id/imageButtonLogo"
+                android:layout_width="53dp"
+                android:layout_height="49dp"
+                android:background="@null"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@mipmap/ic_logo_principal_foreground"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Título -->
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Mi Cartera"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/imageButtonLogo"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Frame con imagen y saldo encima -->
+            <FrameLayout
+                android:id="@+id/wallet_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textTitle">
+
+                <ImageView
+                    android:id="@+id/imageCartera"
+                    android:layout_width="340dp"
+                    android:layout_height="329dp"
+                    android:alpha="0.98"
+                    android:rotation="40"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_cartera_foreground" />
+
+                <TextView
+                    android:id="@+id/textBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="€ 0.00"
+                    android:textColor="@color/black"
+                    android:textSize="40sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <!-- Input y botones -->
+            <EditText
+                android:id="@+id/editAmount"
+                android:layout_width="338dp"
+                android:layout_height="65dp"
+                android:layout_margin="16dp"
+                android:hint="Cantidad"
+                android:inputType="numberDecimal"
+                app:layout_constraintTop_toBottomOf="@id/wallet_frame"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/buttonDeposit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/md_theme_primary"
+                android:text="Depositar"
+                app:layout_constraintTop_toBottomOf="@id/editAmount"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/buttonWithdraw" />
+
+            <Button
+                android:id="@+id/buttonWithdraw"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/md_theme_primary"
+                android:text="Retirar"
+                app:layout_constraintTop_toBottomOf="@id/editAmount"
+                app:layout_constraintStart_toEndOf="@id/buttonDeposit"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Menú lateral -->
+        <include
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            layout="@layout/menu_drawer"
+            android:layout_gravity="start"/>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+    <!-- 2) Barra inferior fija -->
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/md_theme_inversePrimary_mediumContrast">
+
+        <ImageButton
+            android:id="@+id/btnInicio"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_inicio_foreground" />
+
+        <ImageButton
+            android:id="@+id/btnAnuncios"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_megusta_foreground" />
+
+        <ImageButton
+            android:id="@+id/btnMenu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_barra_menu_foreground" />
+    </LinearLayout>
+
+</LinearLayout>

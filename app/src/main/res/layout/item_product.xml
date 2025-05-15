@@ -1,0 +1,120 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
+    app:cardPreventCornerOverlap="false">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/circle_shape"
+            android:translationX="-20dp"
+            android:translationY="60dp"/>
+
+        <View
+            android:layout_width="133dp"
+            android:layout_height="139dp"
+            android:background="@drawable/circle_shape"
+            android:translationX="270dp"
+            android:translationY="200dp" />
+
+        <View
+            android:layout_width="233dp"
+            android:layout_height="233dp"
+            android:background="@drawable/circle_shape"
+            android:translationX="150dp"
+            android:translationY="-60dp" />
+
+        <!-- Tu contenido normal -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+
+        <ImageView
+            android:id="@+id/imageProducto"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="start"
+            android:contentDescription="@string/productos_image"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingStart="8dp">
+
+            <TextView
+                android:id="@+id/textProductoName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textProductoDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textProductoName"
+                android:layout_marginTop="4dp"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textProductoPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+
+
+
+
+        </RelativeLayout>
+    </LinearLayout>
+        <ImageButton
+            android:id="@+id/buyButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|start"
+            android:layout_toStartOf="@id/textProductoPrice"
+            android:background="@null"
+            android:src="@mipmap/ic_comprar_foreground"/>
+
+        <ImageButton
+            android:id="@+id/favButton"
+            android:layout_width="209dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|start"
+            android:layout_toStartOf="@id/textProductoPrice"
+            android:background="@null"
+            android:src="@mipmap/ic_corazon_lleno" />
+        <ImageButton
+            android:id="@+id/favButton2"
+            android:layout_width="209dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|start"
+            android:layout_toStartOf="@id/textProductoPrice"
+            android:background="@null"
+            android:src="@mipmap/ic_corazon_vacio" />
+    </FrameLayout>
+</androidx.cardview.widget.CardView>

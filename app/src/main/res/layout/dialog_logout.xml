@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:padding="24dp"
+    android:background="@color/md_theme_inversePrimary_mediumContrast">
+
+    <View
+        android:layout_width="156dp"
+        android:layout_height="156dp"
+        android:background="@drawable/circle_shape_white"
+        android:elevation="2dp"
+        android:translationX="-40dp"
+        android:translationY="0dp" />
+
+    <View
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/circle_shape_white"
+        android:translationX="220dp"
+        android:translationY="60dp"
+        android:elevation="2dp"/>
+
+    <View
+        android:layout_width="99dp"
+        android:layout_height="103dp"
+        android:background="@drawable/circle_shape_white"
+        android:elevation="2dp"
+        android:translationX="160dp"
+        android:translationY="0dp" />
+
+    <!-- 2) Contenedor blanco del diálogo, con background opaco -->
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/logout_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar Sesión"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/logout_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="¿Estás seguro de que deseas cerrar sesión?"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="No"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/button_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Sí"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/error" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

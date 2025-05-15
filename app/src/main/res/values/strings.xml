@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">QuickSales</string>
+    <string name="exercise_image">Ejercicio</string>
+    <string name="productos_image">Producto</string>
+</resources>
