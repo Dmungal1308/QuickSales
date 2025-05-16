@@ -1,9 +1,11 @@
 package com.iesvdc.acceso.quicksales.ui.view
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -47,6 +49,10 @@ class SettingsActivity : AppCompatActivity() {
                     Glide.with(this).asBitmap().load(bytes).into(binding.avatarImage)
                 }
             }
+        }
+
+        findViewById<ImageButton>(R.id.botonFlecha).setOnClickListener {
+            startActivity(Intent(this, MenuActivity::class.java))
         }
 
         binding.btnEditProfile.setOnClickListener {

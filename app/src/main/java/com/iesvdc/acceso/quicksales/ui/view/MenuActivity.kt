@@ -91,6 +91,9 @@ class MenuActivity : AppCompatActivity() {
             startActivity(Intent(this, FavoritosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
+            startActivity(Intent(this, FavoritosActivity::class.java))
+        }
         binding.root.findViewById<TextView>(R.id.cartera).setOnClickListener {
             startActivity(Intent(this, WalletActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
