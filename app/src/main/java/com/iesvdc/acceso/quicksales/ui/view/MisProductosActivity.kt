@@ -1,8 +1,10 @@
 package com.iesvdc.acceso.quicksales.ui.view
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -14,10 +16,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityMisProductosBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.MisProductosAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.MisProductosViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +29,7 @@ class MisProductosActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMisProductosBinding
     private lateinit var drawerLayout: DrawerLayout
     private val vm: MisProductosViewModel by viewModels()
+    private val settingsVm: SettingsViewModel by viewModels()
 
     private val adapter = MisProductosAdapter(
         onEdit   = { product ->
@@ -82,9 +87,6 @@ class MisProductosActivity : AppCompatActivity() {
         binding.imageButton.setOnClickListener { toggleDrawer() }
         findViewById<ImageButton>(R.id.botonFlecha).setOnClickListener { toggleDrawer() }
         findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
-        findViewById<TextView>(R.id.mis_productos).setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.START)
-        }
         findViewById<TextView>(R.id.cartera).setOnClickListener {
             startActivity(Intent(this, WalletActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -94,15 +96,51 @@ class MisProductosActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         binding.root.findViewById<TextView>(R.id.favoritos).setOnClickListener {
-            startActivity(Intent(this, MisProductosActivity::class.java))
+            startActivity(Intent(this, FavoritosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
             startActivity(Intent(this, FavoritosActivity::class.java))
         }
+        findViewById<ImageButton>(R.id.imageButton3).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
         findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
             startActivity(Intent(this, MenuActivity::class.java))
             finish()
+        }
+        binding.imageButton3.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        // Necesitamos referencia al botonUsuario dentro del NavigationView:
+        val navUserButton = binding.root
+            .findViewById<ImageButton>(R.id.botonUsuario)
+
+        // **Observamos el perfil** y pintamos ambas imágenes
+        settingsVm.profile.observe(this) { user ->
+            val imageBytes = user?.imagenBase64
+                ?.let { Base64.decode(it, Base64.DEFAULT) }
+
+            if (imageBytes != null) {
+                val bmp = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                Glide.with(this)
+                    .load(bmp)
+                    .circleCrop()
+                    .into(binding.imageButton3)
+
+                Glide.with(this)
+                    .load(bmp)
+                    .circleCrop()
+                    .into(navUserButton)
+            } else {
+                // fallback al logo de la app
+                binding.imageButton3.setImageResource(R.mipmap.ic_logo_principal_foreground)
+                navUserButton.setImageResource(R.mipmap.ic_logo_principal_foreground)
+            }
+        }
+        navUserButton.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
         }
     }
 

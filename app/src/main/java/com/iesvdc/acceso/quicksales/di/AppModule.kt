@@ -58,4 +58,9 @@ object AppModule {
     @Provides fun provideGetFavoritesUC(r: FavoriteRepository)   = GetFavoritesUseCase(r)
     @Provides fun provideAddFavoriteUC(r: FavoriteRepository)    = AddFavoriteUseCase(r)
     @Provides fun provideRemoveFavoriteUC(r: FavoriteRepository) = RemoveFavoriteUseCase(r)
+
+    @Provides fun provideGetProfileUseCase(repo: UserRepository) = GetProfileUseCase(repo)
+    @Provides fun provideUpdateProfileUseCase(repo: UserRepository) = UpdateProfileUseCase(repo)
+    @Provides fun provideChangePasswordUseCase(repo: UserRepository) = ChangePasswordUseCase(repo)
+
 }

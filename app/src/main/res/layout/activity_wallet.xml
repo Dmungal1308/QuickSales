@@ -63,16 +63,16 @@
 
             <!-- Logo superior -->
             <ImageButton
-                android:id="@+id/imageButtonLogo"
+                android:id="@+id/imageButton3"
                 android:layout_width="53dp"
                 android:layout_height="49dp"
-                android:background="@null"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:background="@null"
                 android:scaleType="fitCenter"
-                app:srcCompat="@mipmap/ic_logo_principal_foreground"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_logo_principal_foreground" />
 
             <!-- Título -->
             <TextView
@@ -83,7 +83,7 @@
                 android:text="Mi Cartera"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/imageButtonLogo"
+                app:layout_constraintStart_toEndOf="@id/imageButton3"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Frame con imagen y saldo encima -->

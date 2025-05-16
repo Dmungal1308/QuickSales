@@ -2,8 +2,10 @@
 package com.iesvdc.acceso.quicksales.ui.view
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
@@ -15,8 +17,10 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityWalletBinding
+import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,6 +30,7 @@ class WalletActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWalletBinding
     private lateinit var drawerLayout: DrawerLayout
     private val viewModel: WalletViewModel by viewModels()
+    private val settingsVm: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,11 +106,48 @@ class WalletActivity : AppCompatActivity() {
             startActivity(Intent(this, MenuActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        findViewById<ImageButton>(R.id.imageButton3).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
         binding.root.findViewById<TextView>(R.id.mis_productos)
             .setOnClickListener {
                 startActivity(Intent(this, MisProductosActivity::class.java))
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
+
+        binding.imageButton3.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        // Necesitamos referencia al botonUsuario dentro del NavigationView:
+        val navUserButton = binding.root
+            .findViewById<ImageButton>(R.id.botonUsuario)
+
+        // **Observamos el perfil** y pintamos ambas imágenes
+        settingsVm.profile.observe(this) { user ->
+            val imageBytes = user?.imagenBase64
+                ?.let { Base64.decode(it, Base64.DEFAULT) }
+
+            if (imageBytes != null) {
+                val bmp = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                Glide.with(this)
+                    .load(bmp)
+                    .circleCrop()
+                    .into(binding.imageButton3)
+
+                Glide.with(this)
+                    .load(bmp)
+                    .circleCrop()
+                    .into(navUserButton)
+            } else {
+                // fallback al logo de la app
+                binding.imageButton3.setImageResource(R.mipmap.ic_logo_principal_foreground)
+                navUserButton.setImageResource(R.mipmap.ic_logo_principal_foreground)
+            }
+        }
+        navUserButton.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
     }
 
     private fun toggleDrawer() {

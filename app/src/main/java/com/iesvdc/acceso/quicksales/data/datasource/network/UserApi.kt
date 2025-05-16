@@ -5,9 +5,13 @@ package com.iesvdc.acceso.quicksales.data.datasource.network
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.BalanceResponse
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.OperationResponse
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.AmountRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.ChangePasswordRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.UpdateProfileRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface UserApi {
@@ -25,4 +29,13 @@ interface UserApi {
         @Path("id") userId: Int,
         @Body request: AmountRequest
     ): OperationResponse
+    @GET("users/me")
+    suspend fun getProfile(): UserResponse
+
+    @PUT("users/me")
+    suspend fun updateProfile(@Body req: UpdateProfileRequest): UserResponse
+
+    @PUT("users/me/password")
+    suspend fun changePassword(@Body req: ChangePasswordRequest)
+
 }

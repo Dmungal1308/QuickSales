@@ -1,8 +1,12 @@
+// File: com/iesvdc/acceso/quicksales/ui/view/MenuActivity.kt
+
 package com.iesvdc.acceso.quicksales.ui.view
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -14,17 +18,22 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityMenuBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.ProductAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.MenuViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
     private lateinit var drawerLayout: DrawerLayout
+
     private val vm: MenuViewModel by viewModels()
+    private val settingsVm: SettingsViewModel by viewModels()
+
     private lateinit var adapter: ProductAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,76 +42,110 @@ class MenuActivity : AppCompatActivity() {
         setContentView(binding.root)
         drawerLayout = binding.drawerLayout
 
+        // Status bar, insets...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = getColor(R.color.white)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
 
+        // RecyclerView + adapter
         adapter = ProductAdapter(
             onBuy = { vm.purchase(it) },
             onToggleFavorite = { vm.toggleFavorite(it) }
         )
-
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?) = true.also {
-                vm.filterByName(query ?: "")
+        // Observers de productos y favoritos
+        vm.products.observe(this) { adapter.submitList(it) }
+        vm.favoriteIdsLive.observe(this) { adapter.setFavorites(it) }
+        vm.logoutEvent.observe(this) {
+            if (it) {
+                vm.resetLogoutEvent()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
             }
-            override fun onQueryTextChange(newText: String?) = true.also {
-                vm.filterByName(newText ?: "")
-            }
+        }
+
+        // SearchView
+        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(q: String?) = true.also { vm.filterByName(q.orEmpty()) }
+            override fun onQueryTextChange(t: String?)   = true.also { vm.filterByName(t.orEmpty()) }
         })
 
+        // Navegación drawer
+        binding.imageButton.setOnClickListener { toggleDrawer() }
+        findViewById<ImageButton>(R.id.botonFlecha).setOnClickListener { toggleDrawer() }
+        findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
+        binding.root.findViewById<TextView>(R.id.mis_productos)
+            .setOnClickListener {
+                startActivity(Intent(this, MisProductosActivity::class.java))
+                drawerLayout.closeDrawer(GravityCompat.START)
+            }
+        binding.root.findViewById<TextView>(R.id.favoritos).setOnClickListener {
+            startActivity(Intent(this, FavoritosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
         binding.root.findViewById<TextView>(R.id.cartera).setOnClickListener {
             startActivity(Intent(this, WalletActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
-        binding.root.findViewById<TextView>(R.id.mis_productos).setOnClickListener {
-            startActivity(Intent(this, MisProductosActivity::class.java))
-            drawerLayout.closeDrawer(GravityCompat.START)
-        }
-        binding.root.findViewById<TextView>(R.id.favoritos).setOnClickListener {
-            startActivity(Intent(this, MisProductosActivity::class.java))
-            drawerLayout.closeDrawer(GravityCompat.START)
-        }
-        findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
-        }
-        binding.imageButton.setOnClickListener { toggleDrawer() }
-        binding.root.findViewById<ImageButton>(R.id.botonFlecha)
-            .setOnClickListener { toggleDrawer() }
-        binding.root.findViewById<TextView>(R.id.cerrarSesion)
-            .setOnClickListener { showLogoutConfirmationDialog() }
 
 
-        vm.products.observe(this) { adapter.submitList(it) }
-        vm.favoriteIdsLive.observe(this) { adapter.setFavorites(it) }
-        vm.logoutEvent.observe(this) { if (it) {
-            vm.resetLogoutEvent()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        } }
+        binding.root.findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
+
+        // Botones de perfil/ajustes
+        binding.imageButton3.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        // Necesitamos referencia al botonUsuario dentro del NavigationView:
+        val navUserButton = binding.root
+            .findViewById<ImageButton>(R.id.botonUsuario)
+
+        // **Observamos el perfil** y pintamos ambas imágenes
+        settingsVm.profile.observe(this) { user ->
+            val imageBytes = user?.imagenBase64
+                ?.let { Base64.decode(it, Base64.DEFAULT) }
+
+            if (imageBytes != null) {
+                val bmp = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                Glide.with(this)
+                    .load(bmp)
+                    .circleCrop()
+                    .into(binding.imageButton3)
+
+                Glide.with(this)
+                    .load(bmp)
+                    .circleCrop()
+                    .into(navUserButton)
+            } else {
+                // fallback al logo de la app
+                binding.imageButton3.setImageResource(R.mipmap.ic_logo_principal_foreground)
+                navUserButton.setImageResource(R.mipmap.ic_logo_principal_foreground)
+            }
+        }
+        navUserButton.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
     }
 
     private fun toggleDrawer() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START))
-            drawerLayout.closeDrawer(GravityCompat.START)
-        else
-            drawerLayout.openDrawer(GravityCompat.START)
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.closeDrawer(GravityCompat.START)
+        else drawerLayout.openDrawer(GravityCompat.START)
     }
 
     private fun showLogoutConfirmationDialog() {
-        val dialog = LogoutConfirmationDialogFragment()
-        dialog.onLogoutConfirmed = {
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+        val dialog = LogoutConfirmationDialogFragment().apply {
+            onLogoutConfirmed = {
+                startActivity(Intent(this@MenuActivity, LoginActivity::class.java))
+                finish()
+            }
         }
         dialog.show(supportFragmentManager, "LogoutConfirmationDialog")
     }

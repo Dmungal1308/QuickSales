@@ -2,8 +2,10 @@
 package com.iesvdc.acceso.quicksales.ui.view
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -15,10 +17,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityFavoritosBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.ProductAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.FavoritosViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +31,7 @@ class FavoritosActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFavoritosBinding
     private lateinit var drawerLayout: DrawerLayout
     private val vm: FavoritosViewModel by viewModels()
+    private val settingsVm: SettingsViewModel by viewModels()
     private lateinit var adapter: ProductAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +91,9 @@ class FavoritosActivity : AppCompatActivity() {
                 startActivity(Intent(this, MenuActivity::class.java))
                 finish()
             }
-
+        findViewById<ImageButton>(R.id.imageButton3).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
 
         vm.favoriteIds.observe(this) { favSet ->
             adapter.setFavorites(favSet)
@@ -104,6 +111,39 @@ class FavoritosActivity : AppCompatActivity() {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
+        }
+        binding.imageButton3.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        // Necesitamos referencia al botonUsuario dentro del NavigationView:
+        val navUserButton = binding.root
+            .findViewById<ImageButton>(R.id.botonUsuario)
+
+        // **Observamos el perfil** y pintamos ambas imágenes
+        settingsVm.profile.observe(this) { user ->
+            val imageBytes = user?.imagenBase64
+                ?.let { Base64.decode(it, Base64.DEFAULT) }
+
+            if (imageBytes != null) {
+                val bmp = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                Glide.with(this)
+                    .load(bmp)
+                    .circleCrop()
+                    .into(binding.imageButton3)
+
+                Glide.with(this)
+                    .load(bmp)
+                    .circleCrop()
+                    .into(navUserButton)
+            } else {
+                // fallback al logo de la app
+                binding.imageButton3.setImageResource(R.mipmap.ic_logo_principal_foreground)
+                navUserButton.setImageResource(R.mipmap.ic_logo_principal_foreground)
+            }
+        }
+        navUserButton.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
         }
     }
 

@@ -86,19 +86,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Botón Usuario (A la derecha de la flecha) -->
-        <ImageButton
-            android:id="@+id/botonUsuario"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@null"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/ic_logo_principal_foreground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/botonFlecha"
-            app:layout_constraintHorizontal_bias="1.0" />
 
         <!-- Texto "Menú" -->
+
+        <ImageButton
+            android:id="@+id/botonUsuario"
+            android:layout_width="53dp"
+            android:layout_height="49dp"
+            android:layout_marginStart="232dp"
+            android:layout_marginTop="16dp"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@mipmap/ic_logo_principal_foreground" />
+
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
