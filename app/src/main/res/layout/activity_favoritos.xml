@@ -86,7 +86,7 @@
 
     <!-- Botón Anuncios (ImageButton) -->
     <ImageButton
-        android:id="@+id/btnFavoritos"
+        android:id="@+id/btnAnuncios"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

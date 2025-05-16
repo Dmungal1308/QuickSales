@@ -35,9 +35,13 @@
             android:name=".ui.view.MisProductosActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.view.FavoritosActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.PantallaCargaActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
