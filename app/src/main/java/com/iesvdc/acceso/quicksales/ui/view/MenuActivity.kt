@@ -10,6 +10,7 @@ import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -141,6 +142,12 @@ class MenuActivity : AppCompatActivity() {
         navUserButton.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        vm.purchaseError.observe(this) { errMsg ->
+            errMsg?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                vm.clearPurchaseError()
+            }
         }
     }
 

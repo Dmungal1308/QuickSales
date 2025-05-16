@@ -12,6 +12,7 @@ import com.iesvdc.acceso.quicksales.domain.usercase.PurchaseProductUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.RemoveFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.text.Normalizer
 import javax.inject.Inject
 
@@ -37,6 +38,30 @@ class MenuViewModel @Inject constructor(
     private val _logoutEvent = MutableLiveData<Boolean>()
     val logoutEvent: LiveData<Boolean> = _logoutEvent
 
+    private val _purchaseError   = MutableLiveData<String?>()
+    val purchaseError: LiveData<String?> = _purchaseError
+
+    private val _purchaseSuccess = MutableLiveData<Boolean>()
+    val purchaseSuccess: LiveData<Boolean> = _purchaseSuccess
+
+    fun purchaseById(productId: Int) {
+        viewModelScope.launch {
+            try {
+                purchaseProductUseCase(productId)
+                _purchaseSuccess.value = true
+                loadData()
+            } catch (e: HttpException) {
+                // si es 400, mostramos “Saldo insuficiente”
+                if (e.code() == 400) _purchaseError.value = "No tienes saldo suficiente"
+                else                  _purchaseError.value = e.message()
+            } catch (e: Exception) {
+                _purchaseError.value = e.message ?: "Error al comprar"
+            }
+        }
+    }
+
+    fun clearPurchaseError()   { _purchaseError.value = null }
+    fun clearPurchaseSuccess() { _purchaseSuccess.value = false }
     init {
         loadData()
     }
@@ -55,12 +80,6 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    fun purchaseById(productId: Int) {
-        viewModelScope.launch {
-            purchaseProductUseCase(productId)
-            loadData()
-        }
-    }
 
     fun filterByName(query: String) {
         val q = Normalizer
@@ -107,4 +126,5 @@ class MenuViewModel @Inject constructor(
         val temp = Normalizer.normalize(text, Normalizer.Form.NFD)
         return temp.replace("\\p{M}".toRegex(), "").lowercase()
     }
+
 }

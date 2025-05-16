@@ -9,6 +9,7 @@ import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -40,6 +41,8 @@ class FavoritosActivity : AppCompatActivity() {
         setContentView(binding.root)
         drawerLayout = binding.drawerLayout
 
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = getColor(R.color.white)
             window.decorView.systemUiVisibility =
@@ -53,9 +56,14 @@ class FavoritosActivity : AppCompatActivity() {
         }
 
         adapter = ProductAdapter(
-            onBuy = { vm.purchase(it) },
-            onToggleFavorite = { vm.removeFavorite(it) } // en favoritos, togglear quita
+            onBuy = { p ->
+                ConfirmPurchaseDialogFragment
+                    .newInstance(p.id, p.nombre, p.precio.toDouble(), true)
+                    .show(supportFragmentManager, "confirm_purchase")
+            },
+            onToggleFavorite = { vm.removeFavorite(it) }
         )
+
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
@@ -68,7 +76,6 @@ class FavoritosActivity : AppCompatActivity() {
                 vm.filterByName(newText ?: "")
             }
         })
-
 
         // Drawer
         binding.imageButton.setOnClickListener { toggleDrawer() }
@@ -144,6 +151,12 @@ class FavoritosActivity : AppCompatActivity() {
         navUserButton.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        vm.purchaseError.observe(this) { err ->
+            err?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                vm.clearPurchaseError()
+            }
         }
     }
 
