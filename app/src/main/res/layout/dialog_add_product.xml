@@ -64,18 +64,18 @@
             android:elevation="30dp"
             android:layout_marginTop="200dp"/>
 
-        <EditText
-            android:id="@+id/editDescription"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Descripción"
-            android:inputType="textMultiLine"
-            android:lines="3"
-            android:layout_marginBottom="8dp"
-            android:elevation="30dp"
-            android:layout_marginTop="300dp"/>
+    <EditText
+        android:id="@+id/editDescription"
+        android:layout_width="253dp"
+        android:layout_height="103dp"
+        android:layout_marginTop="270dp"
+        android:layout_marginBottom="8dp"
+        android:elevation="30dp"
+        android:hint="Descripción"
+        android:inputType="textMultiLine"
+        android:lines="3" />
 
-        <EditText
+    <EditText
             android:id="@+id/editPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

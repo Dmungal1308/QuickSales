@@ -55,9 +55,15 @@ class MenuActivity : AppCompatActivity() {
 
         // RecyclerView + adapter
         adapter = ProductAdapter(
-            onBuy = { vm.purchase(it) },
+            onBuy = { product ->
+                // en vez de vm.purchase, abrimos el diálogo
+                ConfirmPurchaseDialogFragment
+                    .newInstance(product.id, product.nombre, product.precio.toDouble())
+                    .show(supportFragmentManager, "confirm_purchase")
+            },
             onToggleFavorite = { vm.toggleFavorite(it) }
         )
+        binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 

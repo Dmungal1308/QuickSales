@@ -55,6 +55,13 @@ class MenuViewModel @Inject constructor(
         }
     }
 
+    fun purchaseById(productId: Int) {
+        viewModelScope.launch {
+            purchaseProductUseCase(productId)
+            loadData()
+        }
+    }
+
     fun filterByName(query: String) {
         val q = Normalizer
             .normalize(query.trim(), Normalizer.Form.NFD)

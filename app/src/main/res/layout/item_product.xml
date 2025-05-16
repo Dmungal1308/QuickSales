@@ -101,10 +101,11 @@
 
         <ImageButton
             android:id="@+id/favButton"
-            android:layout_width="209dp"
-            android:layout_height="48dp"
+            android:layout_width="83dp"
+            android:layout_height="46dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom|start"
+            android:layout_marginLeft="70dp"
             android:layout_toStartOf="@id/textProductoPrice"
             android:background="@null"
             android:src="@mipmap/ic_corazon_vacio_foreground" />

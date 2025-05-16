@@ -30,6 +30,7 @@ class ProductRepository @Inject constructor(
         }
     }
 
+
     suspend fun addProduct(response: ProductResponse): ProductResponse {
         val req = ProductRequest(
             nombre        = response.nombre,
@@ -60,8 +61,13 @@ class ProductRepository @Inject constructor(
 
     suspend fun getOtherProducts(): List<ProductResponse> {
         val all = productApi.getProducts()
-        val me = context.getSharedPreferences("SessionPrefs", MODE_PRIVATE)
+        val me = context
+            .getSharedPreferences("SessionPrefs", MODE_PRIVATE)
             .getInt("user_id", -1)
-        return all.filter { it.idVendedor != me }
+        return all.filter {
+            it.idVendedor != me &&
+                    it.estado == "en venta"
+        }
     }
+
 }
