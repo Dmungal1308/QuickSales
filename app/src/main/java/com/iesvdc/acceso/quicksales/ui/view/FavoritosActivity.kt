@@ -64,6 +64,7 @@ class FavoritosActivity : AppCompatActivity() {
             }
         })
 
+
         // Drawer
         binding.imageButton.setOnClickListener { toggleDrawer() }
         binding.root.findViewById<ImageButton>(R.id.botonFlecha)
@@ -86,8 +87,17 @@ class FavoritosActivity : AppCompatActivity() {
                 finish()
             }
 
-        // Observers
-        vm.products.observe(this) { adapter.submitList(it) }
+
+        vm.favoriteIds.observe(this) { favSet ->
+            adapter.setFavorites(favSet)
+        }
+
+        vm.products.observe(this) { lista ->
+            adapter.submitList(lista) {
+                adapter.setFavorites(vm.favoriteIds.value.orEmpty())
+            }
+        }
+
         vm.logoutEvent.observe(this) {
             if (it) {
                 vm.resetLogoutEvent()

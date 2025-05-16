@@ -93,6 +93,13 @@ class MisProductosActivity : AppCompatActivity() {
             startActivity(Intent(this, MenuActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        binding.root.findViewById<TextView>(R.id.favoritos).setOnClickListener {
+            startActivity(Intent(this, MisProductosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
+            startActivity(Intent(this, FavoritosActivity::class.java))
+        }
         findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
             startActivity(Intent(this, MenuActivity::class.java))
             finish()

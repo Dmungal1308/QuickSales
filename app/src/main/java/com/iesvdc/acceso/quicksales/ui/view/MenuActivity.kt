@@ -72,14 +72,15 @@ class MenuActivity : AppCompatActivity() {
             startActivity(Intent(this, MisProductosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
+            startActivity(Intent(this, FavoritosActivity::class.java))
+        }
         binding.imageButton.setOnClickListener { toggleDrawer() }
         binding.root.findViewById<ImageButton>(R.id.botonFlecha)
             .setOnClickListener { toggleDrawer() }
         binding.root.findViewById<TextView>(R.id.cerrarSesion)
             .setOnClickListener { showLogoutConfirmationDialog() }
-        findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
-        }
+
 
         vm.products.observe(this) { adapter.submitList(it) }
         vm.favoriteIdsLive.observe(this) { adapter.setFavorites(it) }

@@ -50,9 +50,7 @@ class ProductAdapter(
                 if (isFav) R.mipmap.ic_corazon_lleno_foreground
                 else       R.mipmap.ic_corazon_vacio_foreground
             )
-            b.favButton.setOnClickListener {
-                onToggleFavorite(p)
-            }
+            b.favButton.setOnClickListener { onToggleFavorite(p) }
         }
     }
 

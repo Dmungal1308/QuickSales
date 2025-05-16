@@ -51,13 +51,20 @@ class MenuViewModel @Inject constructor(
             allProducts.clear()
             allProducts += prods
             _products.value = allProducts
+
         }
     }
 
     fun filterByName(query: String) {
-        val q = normalize(query.trim())
-        _products.value = if (q.isEmpty()) allProducts
-        else allProducts.filter { normalize(it.nombre).contains(q) }
+        val q = Normalizer
+            .normalize(query.trim(), Normalizer.Form.NFD)
+            .replace("\\p{M}".toRegex(), "")
+            .lowercase()
+        _products.value = if (q.isEmpty()) {
+            allProducts
+        } else {
+            allProducts.filter { normalize(it.nombre).contains(q) }
+        }
     }
 
     fun purchase(product: ProductResponse) {

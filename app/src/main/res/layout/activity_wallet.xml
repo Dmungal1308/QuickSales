@@ -186,7 +186,7 @@
             android:src="@mipmap/ic_inicio_foreground" />
 
         <ImageButton
-            android:id="@+id/btnAnuncios"
+            android:id="@+id/btnFavoritos"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

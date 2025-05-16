@@ -43,9 +43,15 @@ class MisProductosViewModel @Inject constructor(
     }
 
     fun filterByName(query: String) {
-        val q = normalize(query.trim())
-        _products.value = if (q.isEmpty()) allProducts
-        else allProducts.filter { normalize(it.nombre).contains(q) }
+        val q = Normalizer
+            .normalize(query.trim(), Normalizer.Form.NFD)
+            .replace("\\p{M}".toRegex(), "")
+            .lowercase()
+        _products.value = if (q.isEmpty()) {
+            allProducts
+        } else {
+            allProducts.filter { normalize(it.nombre).contains(q) }
+        }
     }
 
     fun createProduct(p: ProductResponse) {
