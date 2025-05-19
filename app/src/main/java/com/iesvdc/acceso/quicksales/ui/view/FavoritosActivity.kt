@@ -16,8 +16,10 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityFavoritosBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.ProductAdapter
@@ -62,11 +64,19 @@ class FavoritosActivity : AppCompatActivity() {
                     .newInstance(p.id, p.nombre, p.precio.toDouble(), true)
                     .show(supportFragmentManager, "confirm_purchase")
             },
-            onToggleFavorite = { vm.removeFavorite(it) }
+            onToggleFavorite = { vm.removeFavorite(it) },
+            onItemClick      = { product ->
+                startActivity(Intent(this, ProductDetailActivity::class.java).apply {
+                    putExtra(
+                        ProductDetailActivity.EXTRA_PRODUCT,
+                        Gson().toJson(product)
+                    )
+                })
+            }
         )
 
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerView.adapter = adapter
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -157,6 +167,8 @@ class FavoritosActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     private fun toggleDrawer() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {

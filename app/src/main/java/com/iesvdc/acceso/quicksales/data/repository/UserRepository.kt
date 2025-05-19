@@ -38,6 +38,10 @@ class UserRepository @Inject constructor(
     suspend fun getProfile(): UserResponse =
         userApi.getProfile()
 
+    suspend fun getUserById(id: Int): UserResponse =
+        userApi.getUserById(id)
+
+
 
     suspend fun updateProfile(
         nombre: String,

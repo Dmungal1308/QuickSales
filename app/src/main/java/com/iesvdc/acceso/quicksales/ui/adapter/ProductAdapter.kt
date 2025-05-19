@@ -1,5 +1,6 @@
 package com.iesvdc.acceso.quicksales.ui.adapter
 
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -12,7 +13,8 @@ import com.iesvdc.acceso.quicksales.databinding.ItemProductBinding
 
 class ProductAdapter(
     private val onBuy: (ProductResponse) -> Unit,
-    private val onToggleFavorite: (ProductResponse) -> Unit
+    private val onToggleFavorite: (ProductResponse) -> Unit,
+    private val onItemClick: (ProductResponse) -> Unit
 ) : ListAdapter<ProductResponse, ProductAdapter.ViewHolder>(DIFF) {
 
     private var favoriteIds: Set<Int> = emptySet()
@@ -22,34 +24,43 @@ class ProductAdapter(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(ItemProductBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent, false
+        ))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(private val b: ItemProductBinding) :
-        RecyclerView.ViewHolder(b.root) {
-        fun bind(p: ProductResponse) {
-            b.textProductoName.text = p.nombre
-            b.textProductoDescription.text = p.descripcion
-            b.textProductoPrice.text = "€ %.2f".format(p.precio)
-            p.imagenBase64?.let {
-                val bytes = android.util.Base64.decode(it, android.util.Base64.DEFAULT)
-                Glide.with(b.imageProducto).asBitmap().load(bytes).into(b.imageProducto)
+    inner class ViewHolder(
+        private val binding: ItemProductBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(product: ProductResponse) {
+            // datos
+            binding.textProductoName.text        = product.nombre
+            binding.textProductoPrice.text       = "€ %.2f".format(product.precio)
+
+            product.imagenBase64?.let {
+                val bytes = Base64.decode(it, Base64.DEFAULT)
+                Glide.with(binding.imageProducto)
+                    .asBitmap()
+                    .load(bytes)
+                    .into(binding.imageProducto)
             }
 
-            b.buyButton.setOnClickListener { onBuy(p) }
-
-            // aquí el toggle del icono
-            val isFav = favoriteIds.contains(p.id)
-            b.favButton.setImageResource(
+            // icono favorito
+            val isFav = favoriteIds.contains(product.id)
+            binding.favButton.setImageResource(
                 if (isFav) R.mipmap.ic_corazon_lleno_foreground
-                else       R.mipmap.ic_corazon_vacio_foreground
+                else R.mipmap.ic_corazon_vacio_foreground
             )
-            b.favButton.setOnClickListener { onToggleFavorite(p) }
+
+            // listeners
+            binding.buyButton.setOnClickListener      { onBuy(product) }
+            binding.favButton.setOnClickListener      { onToggleFavorite(product) }
+            binding.root.setOnClickListener           { onItemClick(product) }
         }
     }
 

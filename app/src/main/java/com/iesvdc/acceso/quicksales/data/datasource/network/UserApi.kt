@@ -36,4 +36,8 @@ interface UserApi {
     @PUT("users/me/password")
     suspend fun changePassword(@Body req: ChangePasswordRequest)
 
+    @GET("users/{id}")
+    suspend fun getUserById(@Path("id") id: Int): UserResponse
+
+
 }

@@ -16,8 +16,10 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityMenuBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.ProductAdapter
@@ -60,10 +62,18 @@ class MenuActivity : AppCompatActivity() {
                     .newInstance(product.id, product.nombre, product.precio.toDouble())
                     .show(supportFragmentManager, "confirm_purchase")
             },
-            onToggleFavorite = { vm.toggleFavorite(it) }
+            onToggleFavorite = { vm.toggleFavorite(it) },
+            onItemClick      = { product ->
+                startActivity(Intent(this, ProductDetailActivity::class.java).apply {
+                    putExtra(
+                        ProductDetailActivity.EXTRA_PRODUCT,
+                        Gson().toJson(product)
+                    )
+                })
+            }
         )
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerView.adapter = adapter
 
         vm.products.observe(this) { adapter.submitList(it) }
@@ -140,6 +150,11 @@ class MenuActivity : AppCompatActivity() {
                 vm.clearPurchaseError()
             }
         }
+
+    }
+    override fun onResume() {
+        super.onResume()
+        vm.loadData()
     }
 
     private fun toggleDrawer() {

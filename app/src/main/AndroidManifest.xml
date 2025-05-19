@@ -41,6 +41,9 @@
             android:name=".ui.view.SettingsActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.view.ProductDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.PantallaCargaActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
