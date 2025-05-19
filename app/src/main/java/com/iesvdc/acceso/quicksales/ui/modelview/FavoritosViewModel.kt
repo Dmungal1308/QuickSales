@@ -67,7 +67,7 @@ class FavoritosViewModel @Inject constructor(
         loadFavorites()
     }
 
-    private fun loadFavorites() {
+    fun loadFavorites() {
         viewModelScope.launch {
             val all = getOtherProductsUseCase()
             val favIds = getFavoritesUseCase().map { it.idProducto }.toSet()

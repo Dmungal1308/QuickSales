@@ -70,4 +70,12 @@ class ProductRepository @Inject constructor(
         }
     }
 
+    suspend fun getPurchasedProducts(): List<ProductResponse> {
+        val all = productApi.getProducts()
+        val me = context.getSharedPreferences("SessionPrefs", MODE_PRIVATE)
+            .getInt("user_id", -1)
+        return all.filter { it.idComprador == me }
+    }
+
+
 }

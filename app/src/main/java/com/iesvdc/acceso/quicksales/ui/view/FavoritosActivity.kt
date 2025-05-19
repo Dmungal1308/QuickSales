@@ -111,6 +111,10 @@ class FavoritosActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.imageButton3).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
+        binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
+            startActivity(Intent(this, ProductosCompradosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
 
         vm.favoriteIds.observe(this) { favSet ->
             adapter.setFavorites(favSet)
@@ -166,6 +170,11 @@ class FavoritosActivity : AppCompatActivity() {
                 vm.clearPurchaseError()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        vm.loadFavorites()
     }
 
 
