@@ -39,11 +39,14 @@ class MisProductosViewModel @Inject constructor(
     fun loadMyProducts() {
         viewModelScope.launch {
             val list = getMyProductsUseCase()
+                .filter { it.idComprador == null }
+
             allProducts.clear()
             allProducts += list
             _products.value = list
         }
     }
+
 
     fun filterByName(query: String) {
         val q = Normalizer

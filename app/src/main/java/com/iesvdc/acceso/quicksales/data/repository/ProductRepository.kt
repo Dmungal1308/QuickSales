@@ -20,14 +20,15 @@ class ProductRepository @Inject constructor(
     suspend fun getMyProducts(): List<ProductResponse> {
         return try {
             val all = productApi.getProducts()
-            val prefs = context.getSharedPreferences("SessionPrefs", Context.MODE_PRIVATE)
+            val prefs = context.getSharedPreferences("SessionPrefs", MODE_PRIVATE)
             val meId = prefs.getInt("user_id", -1)
-            all.filter { it.idVendedor == meId }
+            all.filter { it.idVendedor == meId && it.idComprador == null }
         } catch (e: Exception) {
             Log.e("ProductRepo", "getProducts failed", e)
             emptyList()
         }
     }
+
 
 
     suspend fun addProduct(response: ProductResponse): ProductResponse {
