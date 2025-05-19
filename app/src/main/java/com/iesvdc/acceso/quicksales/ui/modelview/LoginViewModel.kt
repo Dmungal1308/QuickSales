@@ -1,21 +1,19 @@
-package com.iesvdc.acceso.quicksales.ui.viewmodel
+package com.iesvdc.acceso.quicksales.ui.modelview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iesvdc.acceso.quicksales.domain.models.UserData
-import com.iesvdc.acceso.quicksales.domain.usercase.LoginResult
-import com.iesvdc.acceso.quicksales.domain.usercase.LoginUserUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.SaveSessionUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.IsLoggedInUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.LoginResult
+import com.iesvdc.acceso.quicksales.domain.usercase.login.LoginUserUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.SaveSessionUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.IsLoggedInUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel para el login, adaptado al nuevo UserData.
- */
+
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUserUseCase: LoginUserUseCase,
@@ -31,9 +29,7 @@ class LoginViewModel @Inject constructor(
 
     private var loggedUser: UserData? = null
 
-    /**
-     * Ejecuta el caso de uso de login con correo y contraseña.
-     */
+
     fun loginUser(correo: String, contrasena: String) {
         viewModelScope.launch {
             when (val result = loginUserUseCase(correo, contrasena)) {
@@ -57,18 +53,14 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Guarda sesión manualmente si ya hay usuario logueado.
-     */
+
     fun saveSession() {
         loggedUser?.let { user ->
             saveSessionUseCase(user.id)
         }
     }
 
-    /**
-     * Comprueba si ya existe sesión.
-     */
+
     fun isLoggedIn(): Boolean {
         return isLoggedInUseCase()
     }

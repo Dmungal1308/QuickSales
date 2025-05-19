@@ -22,6 +22,10 @@ import com.iesvdc.acceso.quicksales.databinding.ActivityMisProductosBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.MisProductosAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.MisProductosViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
+import com.iesvdc.acceso.quicksales.ui.view.dialog.AddProductDialogFragment
+import com.iesvdc.acceso.quicksales.ui.view.dialog.DeleteProductDialogFragment
+import com.iesvdc.acceso.quicksales.ui.view.dialog.EditProductDialogFragment
+import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -67,7 +71,6 @@ class MisProductosActivity : AppCompatActivity() {
             AddProductDialogFragment().show(supportFragmentManager, "AddProductDialog")
         }
 
-        // *** NUEVO: configuración de SearchView ***
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.searchView.clearFocus()
@@ -112,11 +115,9 @@ class MisProductosActivity : AppCompatActivity() {
         binding.imageButton3.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
-        // Necesitamos referencia al botonUsuario dentro del NavigationView:
         val navUserButton = binding.root
             .findViewById<ImageButton>(R.id.botonUsuario)
 
-        // **Observamos el perfil** y pintamos ambas imágenes
         settingsVm.profile.observe(this) { user ->
             val imageBytes = user?.imagenBase64
                 ?.let { Base64.decode(it, Base64.DEFAULT) }
@@ -133,7 +134,6 @@ class MisProductosActivity : AppCompatActivity() {
                     .circleCrop()
                     .into(navUserButton)
             } else {
-                // fallback al logo de la app
                 binding.imageButton3.setImageResource(R.mipmap.ic_logo_principal_foreground)
                 navUserButton.setImageResource(R.mipmap.ic_logo_principal_foreground)
             }

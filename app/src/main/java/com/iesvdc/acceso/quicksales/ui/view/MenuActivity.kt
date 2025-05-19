@@ -1,5 +1,3 @@
-// File: com/iesvdc/acceso/quicksales/ui/view/MenuActivity.kt
-
 package com.iesvdc.acceso.quicksales.ui.view
 
 import android.content.Intent
@@ -25,6 +23,8 @@ import com.iesvdc.acceso.quicksales.databinding.ActivityMenuBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.ProductAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.MenuViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
+import com.iesvdc.acceso.quicksales.ui.view.dialog.ConfirmPurchaseDialogFragment
+import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,7 +43,6 @@ class MenuActivity : AppCompatActivity() {
         setContentView(binding.root)
         drawerLayout = binding.drawerLayout
 
-        // Status bar, insets...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = getColor(R.color.white)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -54,7 +53,6 @@ class MenuActivity : AppCompatActivity() {
             insets
         }
 
-        // RecyclerView + adapter
         adapter = ProductAdapter(
             onBuy = { product ->
                 // en vez de vm.purchase, abrimos el diálogo
@@ -68,7 +66,6 @@ class MenuActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
-        // Observers de productos y favoritos
         vm.products.observe(this) { adapter.submitList(it) }
         vm.favoriteIdsLive.observe(this) { adapter.setFavorites(it) }
         vm.logoutEvent.observe(this) {
@@ -79,13 +76,11 @@ class MenuActivity : AppCompatActivity() {
             }
         }
 
-        // SearchView
         binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?) = true.also { vm.filterByName(q.orEmpty()) }
             override fun onQueryTextChange(t: String?)   = true.also { vm.filterByName(t.orEmpty()) }
         })
 
-        // Navegación drawer
         binding.imageButton.setOnClickListener { toggleDrawer() }
         findViewById<ImageButton>(R.id.botonFlecha).setOnClickListener { toggleDrawer() }
         findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
@@ -109,15 +104,12 @@ class MenuActivity : AppCompatActivity() {
 
         binding.root.findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
 
-        // Botones de perfil/ajustes
         binding.imageButton3.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
-        // Necesitamos referencia al botonUsuario dentro del NavigationView:
         val navUserButton = binding.root
             .findViewById<ImageButton>(R.id.botonUsuario)
 
-        // **Observamos el perfil** y pintamos ambas imágenes
         settingsVm.profile.observe(this) { user ->
             val imageBytes = user?.imagenBase64
                 ?.let { Base64.decode(it, Base64.DEFAULT) }
@@ -134,7 +126,6 @@ class MenuActivity : AppCompatActivity() {
                     .circleCrop()
                     .into(navUserButton)
             } else {
-                // fallback al logo de la app
                 binding.imageButton3.setImageResource(R.mipmap.ic_logo_principal_foreground)
                 navUserButton.setImageResource(R.mipmap.ic_logo_principal_foreground)
             }

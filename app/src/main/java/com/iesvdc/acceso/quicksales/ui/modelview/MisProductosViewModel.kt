@@ -1,10 +1,13 @@
-// File: com/iesvdc/acceso/quicksales/ui/modelview/MisProductosViewModel.kt
 package com.iesvdc.acceso.quicksales.ui.modelview
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.ProductResponse
-import com.iesvdc.acceso.quicksales.domain.usercase.*
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
+import com.iesvdc.acceso.quicksales.domain.usercase.login.LogoutUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.AddProductUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.DeleteProductUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.GetMyProductsUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.UpdateProductUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException

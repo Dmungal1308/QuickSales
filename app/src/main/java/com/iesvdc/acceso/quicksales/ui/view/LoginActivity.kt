@@ -9,7 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.iesvdc.acceso.quicksales.R
-import com.iesvdc.acceso.quicksales.ui.viewmodel.LoginViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

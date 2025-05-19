@@ -1,4 +1,3 @@
-// File: NetworkModule.kt
 package com.iesvdc.acceso.quicksales.di
 
 import android.content.Context

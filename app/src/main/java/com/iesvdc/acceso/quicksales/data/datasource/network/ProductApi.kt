@@ -1,7 +1,7 @@
 package com.iesvdc.acceso.quicksales.data.datasource.network
 
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.ProductRequest
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.ProductResponse
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import retrofit2.http.*
 
 interface ProductApi {

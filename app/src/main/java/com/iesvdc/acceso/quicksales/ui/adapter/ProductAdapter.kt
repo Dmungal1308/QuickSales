@@ -1,4 +1,3 @@
-// File: com/iesvdc/acceso/quicksales/ui/adapter/ProductAdapter.kt
 package com.iesvdc.acceso.quicksales.ui.adapter
 
 import android.view.LayoutInflater
@@ -8,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.R
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.ProductResponse
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import com.iesvdc.acceso.quicksales.databinding.ItemProductBinding
 
 class ProductAdapter(

@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivitySettingsBinding
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
+import com.iesvdc.acceso.quicksales.ui.view.dialog.ChangePasswordDialogFragment
+import com.iesvdc.acceso.quicksales.ui.view.dialog.EditProfileDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,7 +33,6 @@ class SettingsActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
-        // observamos el perfil
         vm.profile.observe(this) { user ->
             if (user != null) {
                 binding.textName.text = user.nombre

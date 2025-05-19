@@ -1,7 +1,7 @@
 package com.iesvdc.acceso.quicksales.data.repository
 
 import com.iesvdc.acceso.quicksales.data.datasource.network.FavoriteApi
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.FavoriteRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.FavoriteRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 

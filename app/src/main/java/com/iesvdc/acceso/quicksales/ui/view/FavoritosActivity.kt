@@ -1,4 +1,3 @@
-// File: com/iesvdc/acceso/quicksales/ui/view/FavoritosActivity.kt
 package com.iesvdc.acceso.quicksales.ui.view
 
 import android.content.Intent
@@ -24,6 +23,8 @@ import com.iesvdc.acceso.quicksales.databinding.ActivityFavoritosBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.ProductAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.FavoritosViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
+import com.iesvdc.acceso.quicksales.ui.view.dialog.ConfirmPurchaseDialogFragment
+import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -77,7 +78,6 @@ class FavoritosActivity : AppCompatActivity() {
             }
         })
 
-        // Drawer
         binding.imageButton.setOnClickListener { toggleDrawer() }
         binding.root.findViewById<ImageButton>(R.id.botonFlecha)
             .setOnClickListener { toggleDrawer() }
@@ -122,11 +122,9 @@ class FavoritosActivity : AppCompatActivity() {
         binding.imageButton3.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
-        // Necesitamos referencia al botonUsuario dentro del NavigationView:
         val navUserButton = binding.root
             .findViewById<ImageButton>(R.id.botonUsuario)
 
-        // **Observamos el perfil** y pintamos ambas imágenes
         settingsVm.profile.observe(this) { user ->
             val imageBytes = user?.imagenBase64
                 ?.let { Base64.decode(it, Base64.DEFAULT) }

@@ -11,7 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.iesvdc.acceso.quicksales.R
-import com.iesvdc.acceso.quicksales.ui.viewmodel.RegistrarViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.RegistrarViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +24,6 @@ class RegistrarActivity : AppCompatActivity() {
     private lateinit var editTextRepeatPassword: EditText
     private lateinit var buttonRegistrar: Button
 
-    // Importa el ViewModel del paquete correcto: ui.viewmodel
     private val registrarViewModel: RegistrarViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

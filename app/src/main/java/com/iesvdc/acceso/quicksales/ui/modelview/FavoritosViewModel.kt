@@ -1,15 +1,14 @@
-// File: com/iesvdc/acceso/quicksales/ui/modelview/FavoritosViewModel.kt
 package com.iesvdc.acceso.quicksales.ui.modelview
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.ProductResponse
-import com.iesvdc.acceso.quicksales.domain.usercase.AddFavoriteUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.GetFavoritesUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.GetOtherProductsUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.LogoutUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.PurchaseProductUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.RemoveFavoriteUseCase
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.AddFavoriteUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.GetFavoritesUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.GetOtherProductsUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.LogoutUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.PurchaseProductUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.RemoveFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -47,9 +46,7 @@ class FavoritosViewModel @Inject constructor(
             loadFavorites()
         } catch (e: Exception) {
             val msg = if (e is HttpException) {
-                // leemos errorBody
                 val errorBody = e.response()?.errorBody()?.string()
-                // si es JSON con campo "error", lo aprovechamos
                 val parsed = try {
                     val json = JSONObject(errorBody ?: "")
                     json.optString("error", "")
@@ -72,18 +69,14 @@ class FavoritosViewModel @Inject constructor(
 
     private fun loadFavorites() {
         viewModelScope.launch {
-            // 1) obtengo todos los productos ajenos
             val all = getOtherProductsUseCase()
-            // 2) obtengo sólo los IDs de favoritos
             val favIds = getFavoritesUseCase().map { it.idProducto }.toSet()
             val favList = all
                 .filter { it.id in favIds }
                 .filter { it.idComprador == null }
             _products.value = favList
             allFavorites = favList
-            // **3) inicializo aquí también el LiveData de favoritos**
             _favoriteIds.value = favIds
-            // 4) filtro la lista original por esos IDs
             _products.value = all.filter { it.id in favIds }
             allFavorites = all.filter { it.id in favIds }
             _products.value = allFavorites
@@ -100,7 +93,6 @@ class FavoritosViewModel @Inject constructor(
                 current.add(product.id)
             }
             _favoriteIds.value = current
-            // y si quieres, vuelves a refrescar sólo los favoritos:
             _products.value = _products.value?.filter { it.id in current }
         }
     }

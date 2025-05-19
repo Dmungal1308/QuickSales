@@ -1,8 +1,8 @@
 package com.iesvdc.acceso.quicksales.data.datasource.network
 
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.LoginRequest
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.LoginResponse
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.RegisterRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.LoginRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.LoginResponse
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.RegisterRequest
 
 import retrofit2.http.Body
 import retrofit2.http.POST

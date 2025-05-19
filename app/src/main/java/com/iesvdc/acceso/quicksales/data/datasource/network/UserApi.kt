@@ -1,13 +1,11 @@
-// File: com/iesvdc/acceso/quicksales/data/datasource/network/UserApi.kt
-
 package com.iesvdc.acceso.quicksales.data.datasource.network
 
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.BalanceResponse
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.OperationResponse
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.BalanceResponse
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.OperationResponse
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.AmountRequest
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.ChangePasswordRequest
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.UpdateProfileRequest
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.UserResponse
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.ChangePasswordRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UpdateProfileRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

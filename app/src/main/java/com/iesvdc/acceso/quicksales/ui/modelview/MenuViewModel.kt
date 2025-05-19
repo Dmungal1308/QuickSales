@@ -1,15 +1,14 @@
-// File: com/iesvdc/acceso/quicksales/ui/modelview/MenuViewModel.kt
 package com.iesvdc.acceso.quicksales.ui.modelview
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.ProductResponse
-import com.iesvdc.acceso.quicksales.domain.usercase.AddFavoriteUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.GetFavoritesUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.GetOtherProductsUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.LogoutUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.PurchaseProductUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.RemoveFavoriteUseCase
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.AddFavoriteUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.GetFavoritesUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.GetOtherProductsUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.LogoutUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.PurchaseProductUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.RemoveFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException

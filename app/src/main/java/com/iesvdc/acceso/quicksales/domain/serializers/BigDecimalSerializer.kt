@@ -8,9 +8,6 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import java.math.BigDecimal
 
-/**
- * Serializer para BigDecimal en Android usando kotlinx.serialization
- */
 object BigDecimalSerializer : KSerializer<BigDecimal> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("BigDecimal", PrimitiveKind.STRING)

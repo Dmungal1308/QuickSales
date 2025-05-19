@@ -4,9 +4,7 @@ import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import com.iesvdc.acceso.quicksales.domain.serializers.BigDecimalSerializer
 
-/**
- * Modelo de dominio Usuario en la app Android, alineado con la API.
- */
+
 @Serializable
 data class UserData(
     val id: Int,

@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.UserResponse
-import com.iesvdc.acceso.quicksales.domain.usercase.ChangePasswordUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.GetProfileUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.UpdateProfileUseCase
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UserResponse
+import com.iesvdc.acceso.quicksales.domain.usercase.login.ChangePasswordUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.usuarios.GetProfileUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.usuarios.UpdateProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -44,7 +44,6 @@ class SettingsViewModel @Inject constructor(
             val updatedUser = updateProfileUseCase(nombre, nombreUsuario, correo, imagenBase64)
             _profile.value = updatedUser
         } catch (e: HttpException) {
-            // leer el body de error
             val errBody = e.response()?.errorBody()?.string()
             Log.e("SettingsViewModel", "Error al actualizar perfil: $errBody")
             _errorToast.value = "No se ha podido guardar la foto: $errBody"

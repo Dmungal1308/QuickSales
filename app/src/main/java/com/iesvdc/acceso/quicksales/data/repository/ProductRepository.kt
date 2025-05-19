@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.util.Log
 import com.iesvdc.acceso.quicksales.data.datasource.network.ProductApi
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.ProductRequest
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.ProductResponse
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 

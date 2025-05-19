@@ -1,18 +1,16 @@
-package com.iesvdc.acceso.quicksales.ui.viewmodel
+package com.iesvdc.acceso.quicksales.ui.modelview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.iesvdc.acceso.quicksales.domain.usercase.RegisterUserUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.RegistrationResult
+import com.iesvdc.acceso.quicksales.domain.usercase.login.RegisterUserUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.RegistrationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel para el registro de usuario, adaptado al nuevo UseCase.
- */
+
 @HiltViewModel
 class RegistrarViewModel @Inject constructor(
     private val registerUserUseCase: RegisterUserUseCase
@@ -24,9 +22,7 @@ class RegistrarViewModel @Inject constructor(
     private val _registrationError = MutableLiveData<String?>()
     val registrationError: LiveData<String?> get() = _registrationError
 
-    /**
-     * Lanza el flujo de registro usando los parámetros del dominio.
-     */
+
     fun registerUser(
         nombreUsuario: String,
         nombreCompleto: String,

@@ -3,12 +3,12 @@ package com.iesvdc.acceso.quicksales.data.repository
 import android.content.Context
 import android.util.Log
 import com.iesvdc.acceso.quicksales.data.datasource.network.AuthApi
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.LoginRequest
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.LoginResponse
-import com.iesvdc.acceso.quicksales.data.datasource.network.models.RegisterRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.LoginRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.LoginResponse
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.RegisterRequest
 import com.iesvdc.acceso.quicksales.domain.models.UserData
-import com.iesvdc.acceso.quicksales.domain.usercase.LoginResult
-import com.iesvdc.acceso.quicksales.domain.usercase.RegistrationResult
+import com.iesvdc.acceso.quicksales.domain.usercase.login.LoginResult
+import com.iesvdc.acceso.quicksales.domain.usercase.login.RegistrationResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException

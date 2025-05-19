@@ -3,10 +3,10 @@ package com.iesvdc.acceso.quicksales.ui.modelview
 import android.app.Application
 import androidx.lifecycle.*
 import com.iesvdc.acceso.quicksales.domain.models.WalletData
-import com.iesvdc.acceso.quicksales.domain.usercase.DepositUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.GetBalanceUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.LogoutUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.WithdrawUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.cartera.DepositUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.GetBalanceUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.LogoutUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.cartera.WithdrawUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -39,7 +39,6 @@ class WalletViewModel @Inject constructor(
     fun loadBalance() {
         viewModelScope.launch {
             try {
-                // Ahora devuelve WalletData
                 val wd: WalletData = getBalanceUC()
                 _balance.value = wd.saldo
             } catch (e: Exception) {
@@ -53,9 +52,9 @@ class WalletViewModel @Inject constructor(
     fun deposit(amount: BigDecimal) {
         viewModelScope.launch {
             try {
-                depositUC(amount)              // tu caso de uso
+                depositUC(amount)
                 _operationResult.value = "Depositado €$amount"
-                loadBalance()                  // refresca saldo
+                loadBalance()
             } catch (e: Exception) {
                 _operationResult.value = "Error al depositar: ${e.message}"
             }

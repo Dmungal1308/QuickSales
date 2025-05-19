@@ -1,4 +1,3 @@
-// File: AppModule.kt
 package com.iesvdc.acceso.quicksales.di
 
 import android.content.Context
@@ -8,7 +7,22 @@ import com.iesvdc.acceso.quicksales.data.datasource.network.UserApi
 import com.iesvdc.acceso.quicksales.data.repository.FavoriteRepository
 import com.iesvdc.acceso.quicksales.data.repository.ProductRepository
 import com.iesvdc.acceso.quicksales.data.repository.UserRepository
-import com.iesvdc.acceso.quicksales.domain.usercase.*
+import com.iesvdc.acceso.quicksales.domain.usercase.cartera.DepositUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.cartera.WithdrawUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.ChangePasswordUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.GetBalanceUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.login.LogoutUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.AddFavoriteUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.GetFavoritesUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.RemoveFavoriteUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.AddProductUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.DeleteProductUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.GetOtherProductsUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.GetProductsUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.PurchaseProductUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.UpdateProductUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.usuarios.GetProfileUseCase
+import com.iesvdc.acceso.quicksales.domain.usercase.usuarios.UpdateProfileUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
