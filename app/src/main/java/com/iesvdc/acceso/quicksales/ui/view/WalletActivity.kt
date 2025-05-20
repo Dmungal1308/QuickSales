@@ -116,6 +116,14 @@ class WalletActivity : AppCompatActivity() {
         binding.imageButton3.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
+        val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
+        settingsVm.profile.observe(this) { me ->
+            tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
+        }
+        tvUsuarios.setOnClickListener {
+            startActivity(Intent(this, UsuariosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
         val navUserButton = binding.root
             .findViewById<ImageButton>(R.id.botonUsuario)
 

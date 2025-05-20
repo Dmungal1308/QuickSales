@@ -7,6 +7,7 @@ import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.Balance
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.ChangePasswordRequest
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.OperationResponse
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UpdateProfileRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UserDetailResponse
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UserResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.math.BigDecimal
@@ -55,6 +56,14 @@ class UserRepository @Inject constructor(
 
     suspend fun changePassword(newPassword: String) {
         userApi.changePassword(ChangePasswordRequest(newPassword))
+    }
+
+    suspend fun getAllUsers(): List<UserDetailResponse> =
+        userApi.getAllUsers()
+
+    suspend fun deleteUser(id: Int): Boolean {
+        val resp = userApi.deleteUser(id)
+        return resp.success ?: false
     }
 
 }

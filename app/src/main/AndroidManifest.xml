@@ -50,6 +50,12 @@
             android:name=".ui.view.ProductosVendidosActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.view.UsuarioDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.UsuariosActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.PantallaCargaActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">

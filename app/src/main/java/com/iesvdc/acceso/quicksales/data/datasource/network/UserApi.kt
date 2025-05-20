@@ -5,8 +5,10 @@ import com.iesvdc.acceso.quicksales.data.datasource.network.models.login.Operati
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.AmountRequest
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.ChangePasswordRequest
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UpdateProfileRequest
+import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UserDetailResponse
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UserResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -38,6 +40,12 @@ interface UserApi {
 
     @GET("users/{id}")
     suspend fun getUserById(@Path("id") id: Int): UserResponse
+
+    @GET("users")
+    suspend fun getAllUsers(): List<UserDetailResponse>
+
+    @DELETE("users/{id}")
+    suspend fun deleteUser(@Path("id") id: Int): OperationResponse
 
 
 }

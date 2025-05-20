@@ -8,36 +8,33 @@ import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
-import com.iesvdc.acceso.quicksales.databinding.ActivityMenuBinding
-import com.iesvdc.acceso.quicksales.ui.adapter.CompradosAdapter
-import com.iesvdc.acceso.quicksales.ui.modelview.ProductosCompradosViewModel
-import com.iesvdc.acceso.quicksales.ui.modelview.ProductosVendidosViewModel
+import com.iesvdc.acceso.quicksales.databinding.ActivityUsuariosBinding
+import com.iesvdc.acceso.quicksales.ui.adapter.UsuariosAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.UsuariosViewModel
 import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProductosVendidosActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMenuBinding
+class UsuariosActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityUsuariosBinding
     private lateinit var drawerLayout: DrawerLayout
-
-    private val vm: ProductosVendidosViewModel by viewModels()
+    private val vm: UsuariosViewModel by viewModels()
     private val settingsVm: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMenuBinding.inflate(layoutInflater)
+        binding = ActivityUsuariosBinding.inflate(layoutInflater)
         setContentView(binding.root)
         drawerLayout = binding.drawerLayout
 
@@ -52,10 +49,15 @@ class ProductosVendidosActivity : AppCompatActivity() {
         }
 
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
-
-        vm.products.observe(this) { list ->
-            binding.recyclerView.adapter = CompradosAdapter(list)
+        vm.users.observe(this) { list ->
+            binding.recyclerView.adapter = list?.let {
+                UsuariosAdapter(it) { user ->
+                    startActivity(Intent(this, UsuarioDetailActivity::class.java)
+                        .putExtra("user", Gson().toJson(user)))
+                }
+            }
         }
+
 
         vm.logoutEvent.observe(this) {
             if (it) {
@@ -88,6 +90,10 @@ class ProductosVendidosActivity : AppCompatActivity() {
             startActivity(Intent(this, MenuActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
+            startActivity(Intent(this, ProductosVendidosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
         binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
             startActivity(Intent(this, ProductosCompradosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -100,11 +106,8 @@ class ProductosVendidosActivity : AppCompatActivity() {
         settingsVm.profile.observe(this) { me ->
             tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
         }
-        tvUsuarios.setOnClickListener {
-            startActivity(Intent(this, UsuariosActivity::class.java))
-            drawerLayout.closeDrawer(GravityCompat.START)
-        }
 
+        // Profile picture in drawer
         val navUserButton = binding.root.findViewById<ImageButton>(R.id.botonUsuario)
         settingsVm.profile.observe(this) { user ->
             val imageBytes = user?.imagenBase64?.let { Base64.decode(it, Base64.DEFAULT) }
@@ -125,7 +128,7 @@ class ProductosVendidosActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        vm.loadPurchased()
+        vm.loadUsers()
     }
 
     private fun toggleDrawer() {
@@ -138,7 +141,7 @@ class ProductosVendidosActivity : AppCompatActivity() {
     private fun showLogoutConfirmationDialog() {
         val dialog = LogoutConfirmationDialogFragment().apply {
             onLogoutConfirmed = {
-                startActivity(Intent(this@ProductosVendidosActivity, LoginActivity::class.java))
+                startActivity(Intent(this@UsuariosActivity, LoginActivity::class.java))
                 finish()
             }
         }

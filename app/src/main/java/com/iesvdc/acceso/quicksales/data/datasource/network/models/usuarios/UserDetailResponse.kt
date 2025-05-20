@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 
 @Serializable
-data class UserResponse(
+data class UserDetailResponse(
     val id: Int,
     val nombre: String,
     val nombreUsuario: String,
     val correo: String,
-    val imagenBase64: String?,
+    val imagenBase64: String? = null,
     val rol: String,
     @Serializable(with = BigDecimalSerializer::class)
     val saldo: BigDecimal

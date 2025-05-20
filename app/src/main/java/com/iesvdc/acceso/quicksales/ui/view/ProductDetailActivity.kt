@@ -6,14 +6,10 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import com.iesvdc.acceso.quicksales.databinding.ActivityProductDetailBinding
@@ -27,32 +23,58 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProductDetailActivity : AppCompatActivity() {
 
     companion object {
-        const val EXTRA_PRODUCT = "extra_product"
+        const val EXTRA_PRODUCT_ID = "extra_product_id"
     }
 
     private lateinit var binding: ActivityProductDetailBinding
     private val menuVm: MenuViewModel by viewModels()
     private val favVm: FavoritosViewModel by viewModels()
-    private val sellerVm: SellerViewModel by viewModels() // Use case para GET /users/{id}
+    private val sellerVm: SellerViewModel by viewModels()
+
+    // <-- Aquí volvemos a añadirla
     private var isFav = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = getColor(R.color.white)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
+        // 1) Recuperar solo el ID
+        val productId = intent.getIntExtra(EXTRA_PRODUCT_ID, -1)
+        if (productId < 0) return finish()
 
-        // 1) Obtener el producto pasado en el Intent
-        val product = intent
-            .getStringExtra(EXTRA_PRODUCT)
-            ?.let { Gson().fromJson(it, ProductResponse::class.java) }
-            ?: return finish()
+        menuVm.products.observe(this) { list ->
+            list.find { it.id == productId }?.let { bindProduct(it) }
+        }
+        menuVm.loadData()
 
-        // 2) Pintar datos
+        // 3) Tras confirmar compra, volver al menú
+        menuVm.purchaseSuccess.observe(this) { success ->
+            if (success) {
+                menuVm.clearPurchaseSuccess()
+                startActivity(Intent(this, MenuActivity::class.java))
+                finish()
+            }
+        }
+        menuVm.purchaseError.observe(this) { err ->
+            err?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                menuVm.clearPurchaseError()
+            }
+        }
+
+        // Flecha atrás
+        binding.botonFlecha.setOnClickListener {
+            finish()
+        }
+    }
+
+    private fun bindProduct(product: ProductResponse) {
         binding.tvName.text        = product.nombre
         binding.tvDescription.text = product.descripcion
         binding.tvPrice.text       = "€ %.2f".format(product.precio)
@@ -61,19 +83,15 @@ class ProductDetailActivity : AppCompatActivity() {
             Glide.with(this).load(bytes).into(binding.imgProduct)
         }
 
+        // <-- Restauramos la observación de favoritos
         menuVm.favoriteIdsLive.observe(this) { favSet ->
             isFav = favSet.contains(product.id)
             updateFavIcon()
         }
-        // inicialmente fuera de observe aún no haya valor; forzamos cargar:
-        menuVm.loadData()
-
-        // 4) Al click togglear:
         binding.btnFav.setOnClickListener {
             menuVm.toggleFavorite(product)
         }
 
-        // 3) Cargar info de vendedor
         sellerVm.loadUser(product.idVendedor)
         sellerVm.user.observe(this) { user ->
             binding.tvSellerUsername.text = user.nombreUsuario
@@ -83,24 +101,14 @@ class ProductDetailActivity : AppCompatActivity() {
                 ?.let { Glide.with(this).load(it).circleCrop().into(binding.imgSeller) }
         }
 
-        // 4) Botones
         binding.btnBuy.setOnClickListener {
             ConfirmPurchaseDialogFragment
-                .newInstance(product.id, product.nombre, product.precio.toDouble(), fromFav=false)
+                .newInstance(product.id, product.nombre, product.precio.toDouble(), fromFav = false)
                 .show(supportFragmentManager, "confirm_purchase")
         }
-        findViewById<ImageButton>(R.id.botonFlecha).setOnClickListener {
-            startActivity(Intent(this, MenuActivity::class.java))
-        }
-
-        // 5) Observa error de compra
-        menuVm.purchaseError.observe(this) { err ->
-            err?.let {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-                menuVm.clearPurchaseError()
-            }
-        }
     }
+
+    // <-- Y este método para cambiar el icono
     private fun updateFavIcon() {
         binding.btnFav.setImageResource(
             if (isFav) R.mipmap.ic_corazon_lleno_foreground
@@ -108,3 +116,4 @@ class ProductDetailActivity : AppCompatActivity() {
         )
     }
 }
+

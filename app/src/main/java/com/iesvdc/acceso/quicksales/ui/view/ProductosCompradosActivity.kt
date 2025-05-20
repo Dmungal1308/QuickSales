@@ -91,6 +91,14 @@ class ProductosCompradosActivity : AppCompatActivity() {
             startActivity(Intent(this, ProductosVendidosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
+        settingsVm.profile.observe(this) { me ->
+            tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
+        }
+        tvUsuarios.setOnClickListener {
+            startActivity(Intent(this, UsuariosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
         findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
             startActivity(Intent(this, MenuActivity::class.java))
             finish()

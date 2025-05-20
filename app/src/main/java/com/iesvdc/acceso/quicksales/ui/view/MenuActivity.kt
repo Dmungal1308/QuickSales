@@ -17,7 +17,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
@@ -65,10 +64,7 @@ class MenuActivity : AppCompatActivity() {
             onToggleFavorite = { vm.toggleFavorite(it) },
             onItemClick      = { product ->
                 startActivity(Intent(this, ProductDetailActivity::class.java).apply {
-                    putExtra(
-                        ProductDetailActivity.EXTRA_PRODUCT,
-                        Gson().toJson(product)
-                    )
+                    putExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, product.id)
                 })
             }
         )
@@ -147,6 +143,14 @@ class MenuActivity : AppCompatActivity() {
                 binding.imageButton3.setImageResource(R.mipmap.ic_logo_principal_foreground)
                 navUserButton.setImageResource(R.mipmap.ic_logo_principal_foreground)
             }
+        }
+        val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
+        settingsVm.profile.observe(this) { me ->
+            tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
+        }
+        tvUsuarios.setOnClickListener {
+            startActivity(Intent(this, UsuariosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
         }
         navUserButton.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))

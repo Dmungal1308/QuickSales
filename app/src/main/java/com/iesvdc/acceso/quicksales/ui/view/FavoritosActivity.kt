@@ -67,10 +67,7 @@ class FavoritosActivity : AppCompatActivity() {
             onToggleFavorite = { vm.removeFavorite(it) },
             onItemClick      = { product ->
                 startActivity(Intent(this, ProductDetailActivity::class.java).apply {
-                    putExtra(
-                        ProductDetailActivity.EXTRA_PRODUCT,
-                        Gson().toJson(product)
-                    )
+                    putExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, product.id)
                 })
             }
         )
@@ -124,6 +121,14 @@ class FavoritosActivity : AppCompatActivity() {
             adapter.submitList(lista) {
                 adapter.setFavorites(vm.favoriteIds.value.orEmpty())
             }
+        }
+        val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
+        settingsVm.profile.observe(this) { me ->
+            tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
+        }
+        tvUsuarios.setOnClickListener {
+            startActivity(Intent(this, UsuariosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
         }
 
         vm.logoutEvent.observe(this) {
