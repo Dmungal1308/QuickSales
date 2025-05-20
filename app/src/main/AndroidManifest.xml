@@ -47,6 +47,9 @@
             android:name=".ui.view.ProductosCompradosActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.view.ProductosVendidosActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.PantallaCargaActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">

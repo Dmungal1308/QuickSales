@@ -162,6 +162,18 @@
             app:layout_constraintStart_toStartOf="parent"
             android:paddingLeft="16dp"/>
 
+        <TextView
+            android:id="@+id/productosVendidos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Productos vendidos"
+            android:textSize="16dp"
+            android:textColor="@color/primario"
+            app:layout_constraintTop_toBottomOf="@id/productosComprados"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="16dp"/>
+
         <!-- Cerrar Sesión (Fijado en la parte inferior) -->
         <TextView
             android:id="@+id/cerrarSesion"

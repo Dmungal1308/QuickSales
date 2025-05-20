@@ -112,7 +112,7 @@ class FavoritosActivity : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
         binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
-            startActivity(Intent(this, ProductosCompradosActivity::class.java))
+            startActivity(Intent(this, ProductosVendidosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
 
@@ -135,6 +135,10 @@ class FavoritosActivity : AppCompatActivity() {
         }
         binding.imageButton3.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
+            startActivity(Intent(this, MenuActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
         }
         val navUserButton = binding.root
             .findViewById<ImageButton>(R.id.botonUsuario)

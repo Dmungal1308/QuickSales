@@ -108,6 +108,10 @@ class WalletActivity : AppCompatActivity() {
             startActivity(Intent(this, ProductosCompradosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
+            startActivity(Intent(this, ProductosVendidosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
 
         binding.imageButton3.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))

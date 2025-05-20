@@ -22,16 +22,17 @@ import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityMenuBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.CompradosAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.ProductosCompradosViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.ProductosVendidosViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
 import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProductosCompradosActivity : AppCompatActivity() {
+class ProductosVendidosActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
     private lateinit var drawerLayout: DrawerLayout
 
-    private val vm: ProductosCompradosViewModel by viewModels()
+    private val vm: ProductosVendidosViewModel by viewModels()
     private val settingsVm: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,8 +88,8 @@ class ProductosCompradosActivity : AppCompatActivity() {
             startActivity(Intent(this, MenuActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
-        binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
-            startActivity(Intent(this, ProductosVendidosActivity::class.java))
+        binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
+            startActivity(Intent(this, ProductosCompradosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
@@ -96,7 +97,6 @@ class ProductosCompradosActivity : AppCompatActivity() {
             finish()
         }
 
-        // Profile picture in drawer
         val navUserButton = binding.root.findViewById<ImageButton>(R.id.botonUsuario)
         settingsVm.profile.observe(this) { user ->
             val imageBytes = user?.imagenBase64?.let { Base64.decode(it, Base64.DEFAULT) }
@@ -130,7 +130,7 @@ class ProductosCompradosActivity : AppCompatActivity() {
     private fun showLogoutConfirmationDialog() {
         val dialog = LogoutConfirmationDialogFragment().apply {
             onLogoutConfirmed = {
-                startActivity(Intent(this@ProductosCompradosActivity, LoginActivity::class.java))
+                startActivity(Intent(this@ProductosVendidosActivity, LoginActivity::class.java))
                 finish()
             }
         }

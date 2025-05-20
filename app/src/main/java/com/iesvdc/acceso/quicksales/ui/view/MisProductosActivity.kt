@@ -119,6 +119,10 @@ class MisProductosActivity : AppCompatActivity() {
             startActivity(Intent(this, ProductosCompradosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
+            startActivity(Intent(this, ProductosVendidosActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
         val navUserButton = binding.root
             .findViewById<ImageButton>(R.id.botonUsuario)
 

@@ -77,5 +77,12 @@ class ProductRepository @Inject constructor(
         return all.filter { it.idComprador == me }
     }
 
+    suspend fun getSoldProducts(): List<ProductResponse> {
+        val all = productApi.getProducts()
+        val me = context.getSharedPreferences("SessionPrefs", MODE_PRIVATE)
+            .getInt("user_id", -1)
+        return all.filter { it.idVendedor == me && it.idComprador != null}
+    }
+
 
 }
