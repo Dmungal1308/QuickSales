@@ -1,5 +1,7 @@
 package com.iesvdc.acceso.quicksales.ui.view
 
+import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.util.Base64
@@ -29,76 +31,100 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatBinding
     private val vm: ChatViewModel by viewModels()
-    private val sellerVm: SellerViewModel by viewModels() // para cargar perfil de usuario
+    private val sellerVm: SellerViewModel by viewModels()
     private var userIdActual: Int = -1
+    private var vendedorId: Int = -1
+    private var compradorId: Int = -1
+    private lateinit var product: ProductResponse
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // status bar light
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = getColor(R.color.white)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
-        // 1) Leer datos del Intent
-        userIdActual = getSharedPreferences("SessionPrefs", MODE_PRIVATE).getInt("user_id", -1)
+        // --- 1) Recuperar datos del Intent ---
+        userIdActual =
+            getSharedPreferences("SessionPrefs", MODE_PRIVATE)
+                .getInt("user_id", -1)
 
-        val sessionId   = intent.getIntExtra(EXTRA_SESSION_ID, -1)
-        val prodJson    = intent.getStringExtra(EXTRA_PRODUCT_JSON)
-        val vendedorId  = intent.getIntExtra(EXTRA_VENDEDOR_ID, -1)
-        val compradorId = intent.getIntExtra(EXTRA_COMPRADOR_ID, -1)
+        val sessionId = intent.getIntExtra(EXTRA_SESSION_ID, -1)
+        val prodJson  = intent.getStringExtra(EXTRA_PRODUCT_JSON)
+        vendedorId    = intent.getIntExtra(EXTRA_VENDEDOR_ID, -1)
+        compradorId   = intent.getIntExtra(EXTRA_COMPRADOR_ID, -1)
 
-        if (sessionId < 0 || prodJson == null) {
+        if (sessionId < 0 || prodJson.isNullOrEmpty()) {
             Toast.makeText(this, "Datos de sesión incompletos", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
-        // 2) Cabecera de producto
-        val product = Gson().fromJson(prodJson, ProductResponse::class.java)
-        binding.tvProductInfo.text = "${product.nombre}  —  € %.2f".format(product.precio)
+        // --- 2) Parsear producto y rellenar cabecera ---
+        product = Gson().fromJson(prodJson, ProductResponse::class.java)
+        binding.tvProductInfo.text = "${product.nombre} — € %.2f".format(product.precio)
 
-        // 3) Cabecera de usuario contrario
+        // foto y nombre del partner
         val partnerId = if (userIdActual == vendedorId) compradorId else vendedorId
         sellerVm.loadUser(partnerId)
         sellerVm.user.observe(this) { user ->
             binding.tvPartnerName.text = user.nombreUsuario
             user.imagenBase64?.let { b64 ->
-                val bytes = Base64.decode(b64, Base64.DEFAULT)
-                Glide.with(this)
-                    .load(bytes)
-                    .circleCrop()
-                    .into(binding.imgPartner)
+                Base64.decode(b64, Base64.DEFAULT)
+                    .let { bytes -> BitmapFactory.decodeByteArray(bytes,0,bytes.size) }
+                    .also { bmp ->
+                        Glide.with(this).load(bmp).circleCrop()
+                            .into(binding.imgPartner)
+                    }
             }
         }
 
-        // 4) RecyclerView de mensajes
+        // --- 3) Click sobre toda la cabecera ---
+        // OJO: en tu layout, ponle a ese LinearLayout: android:id="@+id/headerContainer"
+        binding.headerContainer.setOnClickListener {
+            // solo permitimos si soy comprador
+            if (userIdActual == compradorId) {
+                startActivity(Intent(this, ProductDetailActivity::class.java).apply {
+                    putExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, product.id)
+                })
+            }
+        }
+
+        // --- 4) RecyclerView de mensajes ---
         val adapter = ChatAdapter(emptyList(), userIdActual)
         binding.rvChat.layoutManager = LinearLayoutManager(this)
         binding.rvChat.adapter        = adapter
 
-        vm.mensajes.observe(this) { lista ->
-            adapter.updateList(lista)
-            binding.rvChat.scrollToPosition(lista.size - 1)
+        binding.rvChat.setSaveEnabled(false)
+
+        vm.mensajes.observe(this) { msgs ->
+            adapter.updateList(msgs)
+            binding.rvChat.scrollToPosition(msgs.size - 1)
         }
         vm.error.observe(this) { err ->
             err?.let { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
         }
 
-        // 5) Enviar
-        binding.btnEnviar.setOnClickListener {
-            val texto = binding.etMensaje.text.toString().trim()
-            if (texto.isNotEmpty()) {
-                vm.enviarMensaje(texto)
-                binding.etMensaje.setText("")
-            }
-        }
+        // botón atrás
         binding.botonFlecha.setOnClickListener { finish() }
 
-        // 6) Cargar mensajes de la sesión
+        // botón enviar
+        binding.btnEnviar.setOnClickListener {
+            binding.etMensaje.text.toString().trim()
+                .takeIf { it.isNotEmpty() }
+                ?.also {
+                    vm.enviarMensaje(it)
+                    binding.etMensaje.setText("")
+                }
+        }
+
+        // --- 5) Arrancar carga de mensajes ---
         vm.iniciarSesionSessionId(sessionId)
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+    }
 }
-
