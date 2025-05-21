@@ -195,6 +195,16 @@
             android:src="@mipmap/ic_megusta_foreground" />
 
         <ImageButton
+            android:id="@+id/btnChat"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:src="@mipmap/ic_chat_foreground"/>
+
+        <ImageButton
             android:id="@+id/btnMenu"
             android:layout_width="0dp"
             android:layout_height="match_parent"

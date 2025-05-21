@@ -23,4 +23,7 @@ interface ProductApi {
 
     @POST("productos/{id}/comprar")
     suspend fun purchaseProduct(@Path("id") id: Int): ProductResponse
+
+    @GET("productos/{id}")
+    suspend fun getProductById(@Path("id") id: Int): ProductResponse
 }

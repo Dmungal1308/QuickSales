@@ -84,5 +84,8 @@ class ProductRepository @Inject constructor(
         return all.filter { it.idVendedor == me && it.idComprador != null}
     }
 
+    suspend fun getProductById(id: Int): ProductResponse =
+        productApi.getProductById(id)
+
 
 }

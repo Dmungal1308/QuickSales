@@ -91,6 +91,9 @@ class ProductosCompradosActivity : AppCompatActivity() {
             startActivity(Intent(this, ProductosVendidosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        findViewById<ImageButton>(R.id.btnChat).setOnClickListener {
+            startActivity(Intent(this, ChatRecopiladosActivity::class.java))
+        }
         val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
         settingsVm.profile.observe(this) { me ->
             tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE

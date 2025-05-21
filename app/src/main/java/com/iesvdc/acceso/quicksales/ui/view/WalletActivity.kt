@@ -89,6 +89,9 @@ class WalletActivity : AppCompatActivity() {
             startActivity(Intent(this, MisProductosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        findViewById<ImageButton>(R.id.btnChat).setOnClickListener {
+            startActivity(Intent(this, ChatRecopiladosActivity::class.java))
+        }
         findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
             startActivity(Intent(this, FavoritosActivity::class.java))
         }

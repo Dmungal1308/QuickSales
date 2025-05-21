@@ -94,6 +94,9 @@ class UsuariosActivity : AppCompatActivity() {
             startActivity(Intent(this, ProductosVendidosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+        findViewById<ImageButton>(R.id.btnChat).setOnClickListener {
+            startActivity(Intent(this, ChatRecopiladosActivity::class.java))
+        }
         binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
             startActivity(Intent(this, ProductosCompradosActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)

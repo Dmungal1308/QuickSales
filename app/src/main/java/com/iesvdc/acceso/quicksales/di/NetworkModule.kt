@@ -55,4 +55,8 @@ object NetworkModule {
     @Provides @Singleton
     fun provideFavoriteApi(retrofit: Retrofit): FavoriteApi =
         retrofit.create(FavoriteApi::class.java)
+
+    @Provides @Singleton
+    fun provideChatApi(retrofit: Retrofit): ChatApi =
+        retrofit.create(ChatApi::class.java)
 }

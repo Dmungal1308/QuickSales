@@ -56,6 +56,12 @@
             android:name=".ui.view.UsuariosActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.view.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.ChatRecopiladosActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.PantallaCargaActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
