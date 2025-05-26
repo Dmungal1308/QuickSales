@@ -8,10 +8,8 @@ import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,19 +18,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityMenuBinding
-import com.iesvdc.acceso.quicksales.ui.adapter.CompradosAdapter
-import com.iesvdc.acceso.quicksales.ui.modelview.ProductosCompradosViewModel
-import com.iesvdc.acceso.quicksales.ui.modelview.ProductosVendidosViewModel
+import com.iesvdc.acceso.quicksales.ui.adapter.PurchasedProductsAdapter
+import com.iesvdc.acceso.quicksales.ui.modelview.SoldProductsViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
 import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProductosVendidosActivity : AppCompatActivity() {
+class SoldProductsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
     private lateinit var drawerLayout: DrawerLayout
 
-    private val vm: ProductosVendidosViewModel by viewModels()
+    private val vm: SoldProductsViewModel by viewModels()
     private val settingsVm: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +51,7 @@ class ProductosVendidosActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
 
         vm.products.observe(this) { list ->
-            binding.recyclerView.adapter = CompradosAdapter(list)
+            binding.recyclerView.adapter = PurchasedProductsAdapter(list)
         }
 
         vm.logoutEvent.observe(this) {
@@ -70,15 +67,15 @@ class ProductosVendidosActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
         binding.root.findViewById<TextView>(R.id.mis_productos)
             .setOnClickListener {
-                startActivity(Intent(this, MisProductosActivity::class.java))
+                startActivity(Intent(this, MyProductsActivity::class.java))
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
         binding.root.findViewById<TextView>(R.id.favoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
+            startActivity(Intent(this, FavoritesActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
+            startActivity(Intent(this, FavoritesActivity::class.java))
         }
         findViewById<ImageButton>(R.id.btnChat).setOnClickListener {
             startActivity(Intent(this, ChatRecopiladosActivity::class.java))
@@ -92,7 +89,7 @@ class ProductosVendidosActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
-            startActivity(Intent(this, ProductosCompradosActivity::class.java))
+            startActivity(Intent(this, PurchasedProductsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
@@ -104,7 +101,7 @@ class ProductosVendidosActivity : AppCompatActivity() {
             tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
         }
         tvUsuarios.setOnClickListener {
-            startActivity(Intent(this, UsuariosActivity::class.java))
+            startActivity(Intent(this, UsersActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
 
@@ -141,7 +138,7 @@ class ProductosVendidosActivity : AppCompatActivity() {
     private fun showLogoutConfirmationDialog() {
         val dialog = LogoutConfirmationDialogFragment().apply {
             onLogoutConfirmed = {
-                startActivity(Intent(this@ProductosVendidosActivity, LoginActivity::class.java))
+                startActivity(Intent(this@SoldProductsActivity, LoginActivity::class.java))
                 finish()
             }
         }

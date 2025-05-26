@@ -23,7 +23,7 @@
         android:networkSecurityConfig="@xml/network_security_config">
 
         <activity
-            android:name=".ui.view.RegistrarActivity"
+            android:name=".ui.view.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.LoginActivity"
@@ -32,10 +32,10 @@
             android:name=".ui.view.WalletActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.MisProductosActivity"
+            android:name=".ui.view.MyProductsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.FavoritosActivity"
+            android:name=".ui.view.FavoritesActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.SettingsActivity"
@@ -44,16 +44,16 @@
             android:name=".ui.view.ProductDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.ProductosCompradosActivity"
+            android:name=".ui.view.PurchasedProductsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.ProductosVendidosActivity"
+            android:name=".ui.view.SoldProductsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.UsuarioDetailActivity"
+            android:name=".ui.view.UserDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.UsuariosActivity"
+            android:name=".ui.view.UsersActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.ChatActivity"
@@ -62,7 +62,7 @@
             android:name=".ui.view.ChatRecopiladosActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.PantallaCargaActivity"
+            android:name=".ui.view.LoadingScreenActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
 

@@ -9,10 +9,10 @@ import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import com.iesvdc.acceso.quicksales.databinding.ItemMyProductBinding
 
-class MisProductosAdapter(
+class MyProductsAdapter(
     private val onEdit: (ProductResponse) -> Unit,
     private val onDelete: (ProductResponse) -> Unit
-) : ListAdapter<ProductResponse, MisProductosAdapter.ViewHolder>(DIFF) {
+) : ListAdapter<ProductResponse, MyProductsAdapter.ViewHolder>(DIFF) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         ItemMyProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)

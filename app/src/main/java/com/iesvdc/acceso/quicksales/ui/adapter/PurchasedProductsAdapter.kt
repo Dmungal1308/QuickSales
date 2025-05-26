@@ -8,9 +8,9 @@ import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import com.iesvdc.acceso.quicksales.databinding.ItemProductCompradoBinding
 
-class CompradosAdapter(
+class PurchasedProductsAdapter(
     private val items: List<ProductResponse>
-) : RecyclerView.Adapter<CompradosAdapter.VH>() {
+) : RecyclerView.Adapter<PurchasedProductsAdapter.VH>() {
 
     inner class VH(val b: ItemProductCompradoBinding) : RecyclerView.ViewHolder(b.root) {
         fun bind(p: ProductResponse) {

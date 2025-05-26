@@ -13,11 +13,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.iesvdc.acceso.quicksales.R
-import com.iesvdc.acceso.quicksales.ui.modelview.RegistrarViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RegistrarActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
 
     private lateinit var editTextUsuario: EditText
     private lateinit var editTextNombreApellidos: EditText
@@ -26,7 +26,7 @@ class RegistrarActivity : AppCompatActivity() {
     private lateinit var editTextRepeatPassword: EditText
     private lateinit var buttonRegistrar: Button
 
-    private val registrarViewModel: RegistrarViewModel by viewModels()
+    private val registerViewModel: RegisterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class RegistrarActivity : AppCompatActivity() {
 
         buttonRegistrar.setOnClickListener {
             Log.d("RegistrarActivity", "Botón registrar clickeado")
-            registrarViewModel.registerUser(
+            registerViewModel.registerUser(
                 nombreUsuario   = editTextUsuario.text.toString(),
                 nombreCompleto  = editTextNombreApellidos.text.toString(),
                 correo          = editTextCorreo.text.toString(),
@@ -60,7 +60,7 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        registrarViewModel.registrationSuccess.observe(this, Observer { success ->
+        registerViewModel.registrationSuccess.observe(this, Observer { success ->
             if (success == true) {
                 showToast("Registro exitoso.")
                 startActivity(Intent(this, LoginActivity::class.java))
@@ -68,7 +68,7 @@ class RegistrarActivity : AppCompatActivity() {
             }
         })
 
-        registrarViewModel.registrationError.observe(this, Observer { error ->
+        registerViewModel.registrationError.observe(this, Observer { error ->
             error?.let { showToast(it) }
         })
     }

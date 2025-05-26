@@ -12,9 +12,7 @@ class GetBalanceUseCase @Inject constructor(
     private val userRepo: UserRepository
 ) {
     suspend operator fun invoke(): WalletData = withContext(Dispatchers.IO) {
-        // BalanceResponse tiene un `saldo: Double`
         val resp = userRepo.getBalance()
-        // Lo mapeamos a WalletData con BigDecimal
         WalletData(saldo = resp.saldo)
     }
 }

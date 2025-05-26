@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.appcompat.app.AlertDialog
 import com.iesvdc.acceso.quicksales.R
-import com.iesvdc.acceso.quicksales.ui.modelview.MisProductosViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.MyProductsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,7 +15,7 @@ class DeleteProductDialogFragment(
     private val productId: Int
 ) : DialogFragment() {
 
-    private val vm: MisProductosViewModel by activityViewModels()
+    private val vm: MyProductsViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = requireActivity().layoutInflater

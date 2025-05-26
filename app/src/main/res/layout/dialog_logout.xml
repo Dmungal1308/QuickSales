@@ -30,7 +30,6 @@
         android:translationX="160dp"
         android:translationY="0dp" />
 
-    <!-- 2) Contenedor blanco del diálogo, con background opaco -->
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="wrap_content"

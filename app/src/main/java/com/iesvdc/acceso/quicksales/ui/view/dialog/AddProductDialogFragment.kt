@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import com.iesvdc.acceso.quicksales.databinding.DialogAddProductBinding
-import com.iesvdc.acceso.quicksales.ui.modelview.MisProductosViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.MyProductsViewModel
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
@@ -22,7 +22,7 @@ class AddProductDialogFragment : DialogFragment() {
 
     private var _binding: DialogAddProductBinding? = null
     private val binding get() = _binding!!
-    private val vm: MisProductosViewModel by activityViewModels()
+    private val vm: MyProductsViewModel by activityViewModels()
     private var imageBase64: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

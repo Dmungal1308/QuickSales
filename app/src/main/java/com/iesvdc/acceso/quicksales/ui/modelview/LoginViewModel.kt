@@ -36,7 +36,6 @@ class LoginViewModel @Inject constructor(
                 is LoginResult.Success -> {
                     val user = result.user
                     loggedUser = user
-                    // Guardar sesión con ID de usuario
                     saveSessionUseCase(user.id)
                     _loginSuccess.value = true
                     _loginErrorMessage.value = null

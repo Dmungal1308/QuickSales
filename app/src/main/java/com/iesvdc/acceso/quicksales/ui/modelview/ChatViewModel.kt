@@ -32,9 +32,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    /** Inicia el chat a partir de un sessionId ya existente (sin volver a llamar al endpoint de crear/obtener) */
     fun iniciarSesionSessionId(sessionId: Int) {
-        // Construimos una sesión mínima con sólo el ID (los demás valores no los usamos en esta pantalla)
         _sesion.value = ChatSessionResponse(
             idSesion    = sessionId,
             idProducto  = 0,

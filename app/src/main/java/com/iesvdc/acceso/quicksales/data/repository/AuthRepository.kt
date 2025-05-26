@@ -37,7 +37,6 @@ class AuthRepository @Inject constructor(
                 return LoginResult.Error("Credenciales inválidas")
             }
 
-            // Guardar token y userId
             val prefs = context.getSharedPreferences("SessionPrefs", Context.MODE_PRIVATE)
             prefs.edit().apply {
                 putString("jwt_token", token)
@@ -46,7 +45,6 @@ class AuthRepository @Inject constructor(
             }
             Log.d("AuthRepository", "Token and userId saved: ${userNet.id}")
 
-            // Mapear a UserData de dominio
             val userData = UserData(
                 id            = userNet.id,
                 nombre        = userNet.nombre,
@@ -83,11 +81,9 @@ class AuthRepository @Inject constructor(
         )
 
         return try {
-            // Si la llamada devuelve 2xx, supone éxito
             authApi.register(req)
             RegistrationResult.Success
         } catch (e: HttpException) {
-            // Extraer el JSON de error: {"error":"mensaje"}
             val errorBody = e.response()?.errorBody()?.string()
             val msg = try {
                 Json.decodeFromString<Map<String, String>>(errorBody ?: "")

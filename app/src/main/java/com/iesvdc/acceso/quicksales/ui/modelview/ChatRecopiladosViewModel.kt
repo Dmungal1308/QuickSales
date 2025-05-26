@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.chat.ChatSessionResponse
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import com.iesvdc.acceso.quicksales.domain.usercase.chat.GetChatSessionsUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.login.LogoutUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.GetProductByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,7 +13,6 @@ import javax.inject.Inject
 class ChatRecopiladosViewModel @Inject constructor(
     private val getChatSessions: GetChatSessionsUseCase,
     private val getProductById: GetProductByIdUseCase,
-    private val logoutUseCase: LogoutUseCase
 
 ) : ViewModel() {
 
@@ -38,14 +36,9 @@ class ChatRecopiladosViewModel @Inject constructor(
         _items.value = list
     }
 
-    fun logout() {
-        logoutUseCase()
-        _logoutEvent.value = true
-    }
-
     fun resetLogoutEvent() {
         _logoutEvent.value = false
     }
-    fun clearLogout() { _logoutEvent.value = false }
+
 }
 

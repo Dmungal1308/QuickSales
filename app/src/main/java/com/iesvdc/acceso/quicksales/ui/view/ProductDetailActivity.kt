@@ -15,7 +15,6 @@ import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import com.iesvdc.acceso.quicksales.databinding.ActivityProductDetailBinding
 import com.iesvdc.acceso.quicksales.ui.modelview.ChatViewModel
-import com.iesvdc.acceso.quicksales.ui.modelview.FavoritosViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.MenuViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.SellerViewModel
 import com.iesvdc.acceso.quicksales.ui.view.dialog.ConfirmPurchaseDialogFragment

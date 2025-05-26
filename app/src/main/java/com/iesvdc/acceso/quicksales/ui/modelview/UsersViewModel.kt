@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UsuariosViewModel @Inject constructor(
+class UsersViewModel @Inject constructor(
     private val getAllUsers: GetAllUsersUseCase,
     private val deleteUser: DeleteUserUseCase,
     private val logoutUseCase: LogoutUseCase

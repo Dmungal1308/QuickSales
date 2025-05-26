@@ -8,7 +8,6 @@
     android:orientation="vertical"
     tools:context=".ui.view.MenuActivity">
 
-    <!-- 1) DrawerLayout ocupa la parte central/arriba -->
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         android:layout_weight="1"
         tools:context=".ui.view.EjercicioActivity">
 
-        <!-- Tu ConstraintLayout con ImageButtons, RecyclerView, FAB... -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main"
             android:layout_width="match_parent"
@@ -49,12 +47,10 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Menú lateral incluido, si lo estás usando -->
         <include layout="@layout/menu_drawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
-    <!-- 2) Barra inferior con ImageButtons y fondo distinto -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -62,7 +58,6 @@
         android:gravity="center"
         android:background="@color/md_theme_inversePrimary_mediumContrast">
 
-    <!-- Botón Inicio (ImageButton) -->
     <ImageButton
         android:id="@+id/btnInicio"
         android:layout_width="0dp"
@@ -74,7 +69,6 @@
         android:src="@mipmap/ic_inicio_foreground"
         android:padding="4dp"/>
 
-    <!-- Botón Anuncios (ImageButton) -->
     <ImageButton
         android:id="@+id/btnFavoritos"
         android:layout_width="0dp"
@@ -96,7 +90,6 @@
             android:background="@null"
             android:src="@mipmap/ic_chat_foreground"/>
 
-        <!-- Botón Cerrar Sesión (ImageButton) -->
         <ImageButton
             android:id="@+id/imageButton"
             android:layout_width="0dp"

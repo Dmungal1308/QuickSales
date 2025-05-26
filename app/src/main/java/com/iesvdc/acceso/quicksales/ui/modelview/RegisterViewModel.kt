@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class RegistrarViewModel @Inject constructor(
+class RegisterViewModel @Inject constructor(
     private val registerUserUseCase: RegisterUserUseCase
 ) : ViewModel() {
 

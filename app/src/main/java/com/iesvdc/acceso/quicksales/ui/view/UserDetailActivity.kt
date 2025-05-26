@@ -13,15 +13,15 @@ import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UserDetailResponse
 import com.iesvdc.acceso.quicksales.databinding.UserDetailBinding
-import com.iesvdc.acceso.quicksales.ui.modelview.UsuariosViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.UsersViewModel
 import com.iesvdc.acceso.quicksales.ui.view.dialog.DeleteUserDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UsuarioDetailActivity : AppCompatActivity() {
+class UserDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: UserDetailBinding
-    private val vm: UsuariosViewModel by viewModels()
+    private val vm: UsersViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +58,7 @@ class UsuarioDetailActivity : AppCompatActivity() {
             }.show(supportFragmentManager, "delete_user")
         }
         findViewById<ImageButton>(R.id.botonFlecha).setOnClickListener {
-            startActivity(Intent(this, UsuariosActivity::class.java))
+            startActivity(Intent(this, UsersActivity::class.java))
         }
     }
 }

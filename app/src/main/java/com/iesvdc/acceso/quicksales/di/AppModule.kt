@@ -55,7 +55,6 @@ object AppModule {
         api: FavoriteApi
     ): FavoriteRepository = FavoriteRepository(api)
 
-    // PRODUCT USE CASES
     @Provides fun provideGetProductsUC(r: ProductRepository)      = GetProductsUseCase(r)
     @Provides fun provideAddProductUC(r: ProductRepository)       = AddProductUseCase(r)
     @Provides fun provideUpdateProductUC(r: ProductRepository)    = UpdateProductUseCase(r)
@@ -63,12 +62,10 @@ object AppModule {
     @Provides fun providePurchaseProductUC(r: ProductRepository)  = PurchaseProductUseCase(r)
     @Provides fun provideGetOtherProductsUC(r: ProductRepository) = GetOtherProductsUseCase(r)
 
-    // WALLET USE CASES
     @Provides fun provideGetBalanceUC(r: UserRepository) = GetBalanceUseCase(r)
     @Provides fun provideDepositUC(r: UserRepository)    = DepositUseCase(r)
     @Provides fun provideWithdrawUC(r: UserRepository)   = WithdrawUseCase(r)
 
-    // FAVORITE USE CASES
     @Provides fun provideGetFavoritesUC(r: FavoriteRepository)   = GetFavoritesUseCase(r)
     @Provides fun provideAddFavoriteUC(r: FavoriteRepository)    = AddFavoriteUseCase(r)
     @Provides fun provideRemoveFavoriteUC(r: FavoriteRepository) = RemoveFavoriteUseCase(r)

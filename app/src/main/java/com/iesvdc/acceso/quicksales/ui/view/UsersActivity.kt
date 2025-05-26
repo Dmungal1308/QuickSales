@@ -8,35 +8,33 @@ import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
-import com.iesvdc.acceso.quicksales.databinding.ActivityMenuBinding
-import com.iesvdc.acceso.quicksales.ui.adapter.CompradosAdapter
-import com.iesvdc.acceso.quicksales.ui.modelview.ProductosCompradosViewModel
+import com.iesvdc.acceso.quicksales.databinding.ActivityUsuariosBinding
+import com.iesvdc.acceso.quicksales.ui.adapter.UsersAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.UsersViewModel
 import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProductosCompradosActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMenuBinding
+class UsersActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityUsuariosBinding
     private lateinit var drawerLayout: DrawerLayout
-
-    private val vm: ProductosCompradosViewModel by viewModels()
+    private val vm: UsersViewModel by viewModels()
     private val settingsVm: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMenuBinding.inflate(layoutInflater)
+        binding = ActivityUsuariosBinding.inflate(layoutInflater)
         setContentView(binding.root)
         drawerLayout = binding.drawerLayout
 
@@ -51,10 +49,15 @@ class ProductosCompradosActivity : AppCompatActivity() {
         }
 
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
-
-        vm.products.observe(this) { list ->
-            binding.recyclerView.adapter = CompradosAdapter(list)
+        vm.users.observe(this) { list ->
+            binding.recyclerView.adapter = list?.let {
+                UsersAdapter(it) { user ->
+                    startActivity(Intent(this, UserDetailActivity::class.java)
+                        .putExtra("user", Gson().toJson(user)))
+                }
+            }
         }
+
 
         vm.logoutEvent.observe(this) {
             if (it) {
@@ -69,15 +72,15 @@ class ProductosCompradosActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
         binding.root.findViewById<TextView>(R.id.mis_productos)
             .setOnClickListener {
-                startActivity(Intent(this, MisProductosActivity::class.java))
+                startActivity(Intent(this, MyProductsActivity::class.java))
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
         binding.root.findViewById<TextView>(R.id.favoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
+            startActivity(Intent(this, FavoritesActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
+            startActivity(Intent(this, FavoritesActivity::class.java))
         }
         binding.root.findViewById<TextView>(R.id.cartera).setOnClickListener {
             startActivity(Intent(this, WalletActivity::class.java))
@@ -88,23 +91,23 @@ class ProductosCompradosActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
-            startActivity(Intent(this, ProductosVendidosActivity::class.java))
+            startActivity(Intent(this, SoldProductsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnChat).setOnClickListener {
             startActivity(Intent(this, ChatRecopiladosActivity::class.java))
         }
-        val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
-        settingsVm.profile.observe(this) { me ->
-            tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
-        }
-        tvUsuarios.setOnClickListener {
-            startActivity(Intent(this, UsuariosActivity::class.java))
+        binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
+            startActivity(Intent(this, PurchasedProductsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
             startActivity(Intent(this, MenuActivity::class.java))
             finish()
+        }
+        val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
+        settingsVm.profile.observe(this) { me ->
+            tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
         }
 
         // Profile picture in drawer
@@ -128,7 +131,7 @@ class ProductosCompradosActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        vm.loadPurchased()
+        vm.loadUsers()
     }
 
     private fun toggleDrawer() {
@@ -141,7 +144,7 @@ class ProductosCompradosActivity : AppCompatActivity() {
     private fun showLogoutConfirmationDialog() {
         val dialog = LogoutConfirmationDialogFragment().apply {
             onLogoutConfirmed = {
-                startActivity(Intent(this@ProductosCompradosActivity, LoginActivity::class.java))
+                startActivity(Intent(this@UsersActivity, LoginActivity::class.java))
                 finish()
             }
         }

@@ -3,7 +3,6 @@ package com.iesvdc.acceso.quicksales.ui.modelview
 import android.app.Application
 import androidx.lifecycle.*
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
-import com.iesvdc.acceso.quicksales.domain.usercase.login.LogoutUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.AddProductUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.DeleteProductUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.GetMyProductsUseCase
@@ -15,13 +14,12 @@ import java.text.Normalizer
 import javax.inject.Inject
 
 @HiltViewModel
-class MisProductosViewModel @Inject constructor(
+class MyProductsViewModel @Inject constructor(
     application: Application,
     private val getMyProductsUseCase: GetMyProductsUseCase,
     private val createProductUseCase: AddProductUseCase,
     private val deleteProductUseCase: DeleteProductUseCase,
-    private val updateProductUseCase: UpdateProductUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val updateProductUseCase: UpdateProductUseCase
 ) : AndroidViewModel(application) {
 
     private val allProducts = mutableListOf<ProductResponse>()
@@ -29,7 +27,6 @@ class MisProductosViewModel @Inject constructor(
     val products: LiveData<List<ProductResponse>> = _products
 
     private val _operationResult = MutableLiveData<String>()
-    val operationResult: LiveData<String> = _operationResult
 
     private val _logoutEvent = MutableLiveData<Boolean>()
     val logoutEvent: LiveData<Boolean> = _logoutEvent
@@ -100,10 +97,6 @@ class MisProductosViewModel @Inject constructor(
         }
     }
 
-    fun logout() {
-        logoutUseCase()
-        _logoutEvent.value = true
-    }
 
     fun resetLogoutEvent() {
         _logoutEvent.value = false

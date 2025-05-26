@@ -42,13 +42,11 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // status bar light
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = getColor(R.color.white)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
-        // --- 1) Recuperar datos del Intent ---
         userIdActual =
             getSharedPreferences("SessionPrefs", MODE_PRIVATE)
                 .getInt("user_id", -1)
@@ -64,11 +62,9 @@ class ChatActivity : AppCompatActivity() {
             return
         }
 
-        // --- 2) Parsear producto y rellenar cabecera ---
         product = Gson().fromJson(prodJson, ProductResponse::class.java)
         binding.tvProductInfo.text = "${product.nombre} — € %.2f".format(product.precio)
 
-        // foto y nombre del partner
         val partnerId = if (userIdActual == vendedorId) compradorId else vendedorId
         sellerVm.loadUser(partnerId)
         sellerVm.user.observe(this) { user ->
@@ -83,10 +79,7 @@ class ChatActivity : AppCompatActivity() {
             }
         }
 
-        // --- 3) Click sobre toda la cabecera ---
-        // OJO: en tu layout, ponle a ese LinearLayout: android:id="@+id/headerContainer"
         binding.headerContainer.setOnClickListener {
-            // solo permitimos si soy comprador
             if (userIdActual == compradorId) {
                 startActivity(Intent(this, ProductDetailActivity::class.java).apply {
                     putExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, product.id)
@@ -94,7 +87,6 @@ class ChatActivity : AppCompatActivity() {
             }
         }
 
-        // --- 4) RecyclerView de mensajes ---
         val adapter = ChatAdapter(emptyList(), userIdActual)
         binding.rvChat.layoutManager = LinearLayoutManager(this)
         binding.rvChat.adapter        = adapter
@@ -109,10 +101,8 @@ class ChatActivity : AppCompatActivity() {
             err?.let { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
         }
 
-        // botón atrás
         binding.botonFlecha.setOnClickListener { finish() }
 
-        // botón enviar
         binding.btnEnviar.setOnClickListener {
             binding.etMensaje.text.toString().trim()
                 .takeIf { it.isNotEmpty() }
@@ -122,7 +112,6 @@ class ChatActivity : AppCompatActivity() {
                 }
         }
 
-        // --- 5) Arrancar carga de mensajes ---
         vm.iniciarSesionSessionId(sessionId)
     }
     override fun onSaveInstanceState(outState: Bundle) {

@@ -14,6 +14,6 @@ data class UserNetworkModel(
     val correo: String,
     val imagenBase64: String? = null,
     val rol: String? = null,
-    val saldo: String       // como String en JSON
+    val saldo: String
 )
 

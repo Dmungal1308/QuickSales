@@ -4,7 +4,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.iesvdc.acceso.quicksales.R
@@ -23,7 +22,6 @@ class ChatAdapter(
 
     inner class VH(val b: ItemMensajeBinding) : RecyclerView.ViewHolder(b.root) {
         fun bind(m: ChatMessageResponse) {
-            // 1) Texto y hora
             b.tvTexto.text = m.texto
             val horaMin = try {
                 parser.parse(m.fechaEnvio)?.let { timeFormatter.format(it) } ?: m.fechaEnvio
@@ -32,16 +30,13 @@ class ChatAdapter(
             }
             b.tvFecha.text = horaMin
 
-            // 2) Ajustar burbuja y colores
             val params = b.container.layoutParams as FrameLayout.LayoutParams
             if (m.idRemitente == userIdActual) {
-                // Propio → a la derecha
                 params.gravity = Gravity.END
                 b.container.setBackgroundResource(R.drawable.bg_burbuja_mia)
                 b.tvTexto.setTextColor(ContextCompat.getColor(b.root.context, R.color.white))
                 b.tvFecha.setTextColor(ContextCompat.getColor(b.root.context, R.color.white))
             } else {
-                // Otro → a la izquierda
                 params.gravity = Gravity.START
                 b.container.setBackgroundResource(R.drawable.bg_burbuja_otros)
                 b.tvTexto.setTextColor(ContextCompat.getColor(b.root.context, R.color.white))

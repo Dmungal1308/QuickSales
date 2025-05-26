@@ -8,10 +8,8 @@ import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,11 +20,8 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityChatRecopiladosBinding
-import com.iesvdc.acceso.quicksales.databinding.ActivityMenuBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.ChatSessionsAdapter
-import com.iesvdc.acceso.quicksales.ui.adapter.CompradosAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.ChatRecopiladosViewModel
-import com.iesvdc.acceso.quicksales.ui.modelview.ProductosCompradosViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
 import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,7 +64,6 @@ class ChatRecopiladosActivity : AppCompatActivity() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = ChatSessionsAdapter(emptyList()) { item ->
-            // Al pulsar una sesión abrimos ChatActivity pasándole todos los datos
             startActivity(Intent(this, ChatActivity::class.java).apply {
                 putExtra(ChatActivity.EXTRA_SESSION_ID,    item.session.idSesion)
                 putExtra(ChatActivity.EXTRA_PRODUCT_JSON,  Gson().toJson(item.product))
@@ -94,15 +88,15 @@ class ChatRecopiladosActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
         binding.root.findViewById<TextView>(R.id.mis_productos)
             .setOnClickListener {
-                startActivity(Intent(this, MisProductosActivity::class.java))
+                startActivity(Intent(this, MyProductsActivity::class.java))
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
         binding.root.findViewById<TextView>(R.id.favoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
+            startActivity(Intent(this, FavoritesActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
+            startActivity(Intent(this, FavoritesActivity::class.java))
         }
         binding.root.findViewById<TextView>(R.id.cartera).setOnClickListener {
             startActivity(Intent(this, WalletActivity::class.java))
@@ -113,11 +107,11 @@ class ChatRecopiladosActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
-            startActivity(Intent(this, ProductosVendidosActivity::class.java))
+            startActivity(Intent(this, SoldProductsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
-            startActivity(Intent(this, ProductosCompradosActivity::class.java))
+            startActivity(Intent(this, PurchasedProductsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
@@ -125,7 +119,7 @@ class ChatRecopiladosActivity : AppCompatActivity() {
             tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
         }
         tvUsuarios.setOnClickListener {
-            startActivity(Intent(this, UsuariosActivity::class.java))
+            startActivity(Intent(this, UsersActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
@@ -133,7 +127,6 @@ class ChatRecopiladosActivity : AppCompatActivity() {
             finish()
         }
 
-        // Profile picture in drawer
         val navUserButton = binding.root.findViewById<ImageButton>(R.id.botonUsuario)
         settingsVm.profile.observe(this) { user ->
             val imageBytes = user?.imagenBase64?.let { Base64.decode(it, Base64.DEFAULT) }

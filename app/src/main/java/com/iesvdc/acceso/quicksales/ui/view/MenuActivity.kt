@@ -18,7 +18,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.databinding.ActivityMenuBinding
 import com.iesvdc.acceso.quicksales.ui.adapter.ProductAdapter
@@ -56,7 +55,6 @@ class MenuActivity : AppCompatActivity() {
 
         adapter = ProductAdapter(
             onBuy = { product ->
-                // en vez de vm.purchase, abrimos el diálogo
                 ConfirmPurchaseDialogFragment
                     .newInstance(product.id, product.nombre, product.precio.toDouble())
                     .show(supportFragmentManager, "confirm_purchase")
@@ -92,15 +90,15 @@ class MenuActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
         binding.root.findViewById<TextView>(R.id.mis_productos)
             .setOnClickListener {
-                startActivity(Intent(this, MisProductosActivity::class.java))
+                startActivity(Intent(this, MyProductsActivity::class.java))
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
         binding.root.findViewById<TextView>(R.id.favoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
+            startActivity(Intent(this, FavoritesActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
-            startActivity(Intent(this, FavoritosActivity::class.java))
+            startActivity(Intent(this, FavoritesActivity::class.java))
         }
         findViewById<ImageButton>(R.id.btnChat).setOnClickListener {
             startActivity(Intent(this, ChatRecopiladosActivity::class.java))
@@ -110,11 +108,11 @@ class MenuActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
-            startActivity(Intent(this, ProductosCompradosActivity::class.java))
+            startActivity(Intent(this, PurchasedProductsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
-            startActivity(Intent(this, ProductosVendidosActivity::class.java))
+            startActivity(Intent(this, SoldProductsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
 
@@ -152,7 +150,7 @@ class MenuActivity : AppCompatActivity() {
             tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
         }
         tvUsuarios.setOnClickListener {
-            startActivity(Intent(this, UsuariosActivity::class.java))
+            startActivity(Intent(this, UsersActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         navUserButton.setOnClickListener {

@@ -13,7 +13,6 @@
         android:layout_height="match_parent"
         android:padding="0dp">
 
-        <!-- Botón Flecha (Cerrar Drawer) -->
 
         <View
             android:id="@+id/bgCircle1"
@@ -85,9 +84,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Botón Usuario (A la derecha de la flecha) -->
-
-        <!-- Texto "Menú" -->
 
         <ImageButton
             android:id="@+id/botonUsuario"
@@ -188,7 +184,6 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
 
-        <!-- Cerrar Sesión (Fijado en la parte inferior) -->
         <TextView
             android:id="@+id/cerrarSesion"
             android:layout_width="match_parent"

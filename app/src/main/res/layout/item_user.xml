@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Decorative background circles -->
         <View
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -38,7 +37,6 @@
             android:translationX="-20dp"
             android:translationY="200dp" />
 
-        <!-- Content: image at top, name below, price, then buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

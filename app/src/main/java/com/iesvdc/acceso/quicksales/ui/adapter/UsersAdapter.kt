@@ -8,10 +8,10 @@ import com.bumptech.glide.Glide
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.usuarios.UserDetailResponse
 import com.iesvdc.acceso.quicksales.databinding.ItemUserBinding
 
-class UsuariosAdapter(
+class UsersAdapter(
     private val items: List<UserDetailResponse>,
     private val onClick: (UserDetailResponse) -> Unit
-): RecyclerView.Adapter<UsuariosAdapter.VH>() {
+): RecyclerView.Adapter<UsersAdapter.VH>() {
     inner class VH(val b: ItemUserBinding): RecyclerView.ViewHolder(b.root) {
         fun bind(u: UserDetailResponse) {
             b.tvUserName.text = u.nombreUsuario

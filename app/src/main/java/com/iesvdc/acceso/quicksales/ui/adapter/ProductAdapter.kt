@@ -38,7 +38,6 @@ class ProductAdapter(
         private val binding: ItemProductBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(product: ProductResponse) {
-            // datos
             binding.textProductoName.text        = product.nombre
             binding.textProductoPrice.text       = "€ %.2f".format(product.precio)
 
@@ -50,14 +49,12 @@ class ProductAdapter(
                     .into(binding.imageProducto)
             }
 
-            // icono favorito
             val isFav = favoriteIds.contains(product.id)
             binding.favButton.setImageResource(
                 if (isFav) R.mipmap.ic_corazon_lleno_foreground
                 else R.mipmap.ic_corazon_vacio_foreground
             )
 
-            // listeners
             binding.buyButton.setOnClickListener      { onBuy(product) }
             binding.favButton.setOnClickListener      { onToggleFavorite(product) }
             binding.root.setOnClickListener           { onItemClick(product) }

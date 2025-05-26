@@ -13,7 +13,7 @@ import com.iesvdc.acceso.quicksales.ui.modelview.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PantallaCargaActivity : AppCompatActivity() {
+class LoadingScreenActivity : AppCompatActivity() {
 
     private val splashViewModel: SplashViewModel by viewModels()
 
@@ -22,7 +22,7 @@ class PantallaCargaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pantalla_carga)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.statusBarColor = getColor(R.color.md_theme_inversePrimary)
+            window.statusBarColor = getColor(R.color.white)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 

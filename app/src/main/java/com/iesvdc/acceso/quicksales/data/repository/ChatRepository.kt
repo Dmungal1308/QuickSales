@@ -6,8 +6,6 @@ import com.iesvdc.acceso.quicksales.data.datasource.network.EnviarMensajeRequest
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.chat.ChatMessageResponse
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.chat.ChatSessionResponse
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @ActivityRetainedScoped

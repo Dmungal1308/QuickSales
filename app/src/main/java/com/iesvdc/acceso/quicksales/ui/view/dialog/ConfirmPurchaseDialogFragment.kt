@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.iesvdc.acceso.quicksales.databinding.DialogConfirmPurchaseBinding
-import com.iesvdc.acceso.quicksales.ui.modelview.FavoritosViewModel
+import com.iesvdc.acceso.quicksales.ui.modelview.FavoritesViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.MenuViewModel
 
 class ConfirmPurchaseDialogFragment : DialogFragment() {
@@ -20,7 +20,7 @@ class ConfirmPurchaseDialogFragment : DialogFragment() {
     private var productName: String = ""
     private var productPrice: Double = 0.0
     private val menuVm: MenuViewModel        by activityViewModels()
-    private val favVm: FavoritosViewModel by activityViewModels()
+    private val favVm: FavoritesViewModel by activityViewModels()
     private var fromFav = false
 
     companion object {

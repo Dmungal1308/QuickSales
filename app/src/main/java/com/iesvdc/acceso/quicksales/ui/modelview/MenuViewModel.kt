@@ -22,8 +22,7 @@ class MenuViewModel @Inject constructor(
     private val purchaseProductUseCase: PurchaseProductUseCase,
     private val getFavoritesUseCase: GetFavoritesUseCase,
     private val addFavoriteUseCase: AddFavoriteUseCase,
-    private val removeFavoriteUseCase: RemoveFavoriteUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase
 ) : AndroidViewModel(application) {
 
     private val allProducts = mutableListOf<ProductResponse>()
@@ -50,7 +49,6 @@ class MenuViewModel @Inject constructor(
                 _purchaseSuccess.value = true
                 loadData()
             } catch (e: HttpException) {
-                // si es 400, mostramos “Saldo insuficiente”
                 if (e.code() == 400) _purchaseError.value = "No tienes saldo suficiente"
                 else                  _purchaseError.value = e.message()
             } catch (e: Exception) {
@@ -92,12 +90,6 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    fun purchase(product: ProductResponse) {
-        viewModelScope.launch {
-            purchaseProductUseCase(product.id)
-            loadData()
-        }
-    }
 
     fun toggleFavorite(product: ProductResponse) {
         viewModelScope.launch {
@@ -110,11 +102,6 @@ class MenuViewModel @Inject constructor(
             }
             _favoriteIdsLive.value = favoriteIds
         }
-    }
-
-    fun logout() {
-        logoutUseCase()
-        _logoutEvent.value = true
     }
 
     fun resetLogoutEvent() {

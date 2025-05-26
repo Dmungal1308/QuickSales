@@ -8,7 +8,6 @@ import android.util.Base64
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -16,40 +15,47 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
-import com.iesvdc.acceso.quicksales.databinding.ActivityFavoritosBinding
-import com.iesvdc.acceso.quicksales.ui.adapter.ProductAdapter
-import com.iesvdc.acceso.quicksales.ui.modelview.FavoritosViewModel
+import com.iesvdc.acceso.quicksales.databinding.ActivityMisProductosBinding
+import com.iesvdc.acceso.quicksales.ui.adapter.MyProductsAdapter
+import com.iesvdc.acceso.quicksales.ui.modelview.MyProductsViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
-import com.iesvdc.acceso.quicksales.ui.view.dialog.ConfirmPurchaseDialogFragment
+import com.iesvdc.acceso.quicksales.ui.view.dialog.AddProductDialogFragment
+import com.iesvdc.acceso.quicksales.ui.view.dialog.DeleteProductDialogFragment
+import com.iesvdc.acceso.quicksales.ui.view.dialog.EditProductDialogFragment
 import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FavoritosActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityFavoritosBinding
+class MyProductsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMisProductosBinding
     private lateinit var drawerLayout: DrawerLayout
-    private val vm: FavoritosViewModel by viewModels()
+    private val vm: MyProductsViewModel by viewModels()
     private val settingsVm: SettingsViewModel by viewModels()
-    private lateinit var adapter: ProductAdapter
+
+    private val adapter = MyProductsAdapter(
+        onEdit   = { product ->
+            EditProductDialogFragment(product)
+                .show(supportFragmentManager, "EditProductDialog")
+        },
+        onDelete = { product ->
+            DeleteProductDialogFragment(product.id)
+                .show(supportFragmentManager, "DeleteProductDialog")
+        }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityFavoritosBinding.inflate(layoutInflater)
+        binding = ActivityMisProductosBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         drawerLayout = binding.drawerLayout
-
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = getColor(R.color.white)
-            window.decorView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { view, insets ->
@@ -58,94 +64,74 @@ class FavoritosActivity : AppCompatActivity() {
             insets
         }
 
-        adapter = ProductAdapter(
-            onBuy = { p ->
-                ConfirmPurchaseDialogFragment
-                    .newInstance(p.id, p.nombre, p.precio.toDouble(), true)
-                    .show(supportFragmentManager, "confirm_purchase")
-            },
-            onToggleFavorite = { vm.removeFavorite(it) },
-            onItemClick      = { product ->
-                startActivity(Intent(this, ProductDetailActivity::class.java).apply {
-                    putExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, product.id)
-                })
-            }
-        )
-
-
-        binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
+        binding.fabAdd.setOnClickListener {
+            AddProductDialogFragment().show(supportFragmentManager, "AddProductDialog")
+        }
+
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?) = true.also {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                binding.searchView.clearFocus()
                 vm.filterByName(query ?: "")
+                return true
             }
-            override fun onQueryTextChange(newText: String?) = true.also {
+            override fun onQueryTextChange(newText: String?): Boolean {
                 vm.filterByName(newText ?: "")
+                return true
             }
         })
 
+        vm.products.observe(this) { list ->
+            adapter.submitList(list)
+        }
+
         binding.imageButton.setOnClickListener { toggleDrawer() }
-        binding.root.findViewById<ImageButton>(R.id.botonFlecha)
-            .setOnClickListener { toggleDrawer() }
-        binding.root.findViewById<TextView>(R.id.cerrarSesion)
-            .setOnClickListener { showLogoutConfirmationDialog() }
-        binding.root.findViewById<TextView>(R.id.mis_productos)
-            .setOnClickListener {
-                startActivity(Intent(this, MisProductosActivity::class.java))
-                drawerLayout.closeDrawer(GravityCompat.START)
-            }
-        binding.root.findViewById<TextView>(R.id.cartera)
-            .setOnClickListener {
-                startActivity(Intent(this, WalletActivity::class.java))
-                drawerLayout.closeDrawer(GravityCompat.START)
-            }
-        findViewById<ImageButton>(R.id.btnInicio)
-            .setOnClickListener {
-                startActivity(Intent(this, MenuActivity::class.java))
-                finish()
-            }
-        findViewById<ImageButton>(R.id.imageButton3).setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+        findViewById<ImageButton>(R.id.botonFlecha).setOnClickListener { toggleDrawer() }
+        findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
+        findViewById<TextView>(R.id.cartera).setOnClickListener {
+            startActivity(Intent(this, WalletActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        findViewById<TextView>(R.id.textView3).setOnClickListener {
+            startActivity(Intent(this, MenuActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        binding.root.findViewById<TextView>(R.id.favoritos).setOnClickListener {
+            startActivity(Intent(this, FavoritesActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
         }
         findViewById<ImageButton>(R.id.btnChat).setOnClickListener {
             startActivity(Intent(this, ChatRecopiladosActivity::class.java))
         }
+        findViewById<ImageButton>(R.id.btnFavoritos).setOnClickListener {
+            startActivity(Intent(this, FavoritesActivity::class.java))
+        }
+        findViewById<ImageButton>(R.id.imageButton3).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
+            startActivity(Intent(this, MenuActivity::class.java))
+            finish()
+        }
+        binding.imageButton3.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
         binding.root.findViewById<TextView>(R.id.productosComprados).setOnClickListener {
-            startActivity(Intent(this, ProductosVendidosActivity::class.java))
+            startActivity(Intent(this, PurchasedProductsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
-
-        vm.favoriteIds.observe(this) { favSet ->
-            adapter.setFavorites(favSet)
-        }
-
-        vm.products.observe(this) { lista ->
-            adapter.submitList(lista) {
-                adapter.setFavorites(vm.favoriteIds.value.orEmpty())
-            }
+        binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
+            startActivity(Intent(this, SoldProductsActivity::class.java))
+            drawerLayout.closeDrawer(GravityCompat.START)
         }
         val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
         settingsVm.profile.observe(this) { me ->
             tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
         }
         tvUsuarios.setOnClickListener {
-            startActivity(Intent(this, UsuariosActivity::class.java))
-            drawerLayout.closeDrawer(GravityCompat.START)
-        }
-
-        vm.logoutEvent.observe(this) {
-            if (it) {
-                vm.resetLogoutEvent()
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-            }
-        }
-        binding.imageButton3.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
-        binding.root.findViewById<TextView>(R.id.productosVendidos).setOnClickListener {
-            startActivity(Intent(this, MenuActivity::class.java))
+            startActivity(Intent(this, UsersActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         val navUserButton = binding.root
@@ -167,7 +153,6 @@ class FavoritosActivity : AppCompatActivity() {
                     .circleCrop()
                     .into(navUserButton)
             } else {
-                // fallback al logo de la app
                 binding.imageButton3.setImageResource(R.mipmap.ic_logo_principal_foreground)
                 navUserButton.setImageResource(R.mipmap.ic_logo_principal_foreground)
             }
@@ -176,27 +161,13 @@ class FavoritosActivity : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
-        vm.purchaseError.observe(this) { err ->
-            err?.let {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-                vm.clearPurchaseError()
-            }
-        }
     }
-
-    override fun onResume() {
-        super.onResume()
-        vm.loadFavorites()
-    }
-
-
 
     private fun toggleDrawer() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
+        else
             drawerLayout.openDrawer(GravityCompat.START)
-        }
     }
 
     private fun showLogoutConfirmationDialog() {

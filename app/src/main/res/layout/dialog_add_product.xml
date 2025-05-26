@@ -6,7 +6,6 @@
     android:clipToPadding="false"
     android:background="@color/md_theme_inversePrimary_mediumContrast">
 
-    <!-- Fondos circulares decorativos -->
     <View
         android:layout_width="156dp"
         android:layout_height="156dp"

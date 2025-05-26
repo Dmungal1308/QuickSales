@@ -3,10 +3,8 @@ package com.iesvdc.acceso.quicksales.ui.modelview
 import android.app.Application
 import androidx.lifecycle.*
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
-import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.AddFavoriteUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.GetFavoritesUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.GetOtherProductsUseCase
-import com.iesvdc.acceso.quicksales.domain.usercase.login.LogoutUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.productos.normal.PurchaseProductUseCase
 import com.iesvdc.acceso.quicksales.domain.usercase.productos.favoritos.RemoveFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,14 +15,12 @@ import java.text.Normalizer
 import javax.inject.Inject
 
 @HiltViewModel
-class FavoritosViewModel @Inject constructor(
+class FavoritesViewModel @Inject constructor(
     application: Application,
     private val getOtherProductsUseCase: GetOtherProductsUseCase,
     private val getFavoritesUseCase: GetFavoritesUseCase,
     private val purchaseProductUseCase: PurchaseProductUseCase,
-    private val removeFavoriteUseCase: RemoveFavoriteUseCase,
-    private val addFavoriteUseCase: AddFavoriteUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase
 ) : AndroidViewModel(application) {
 
     private val _products = MutableLiveData<List<ProductResponse>>()
@@ -83,20 +79,6 @@ class FavoritosViewModel @Inject constructor(
         }
     }
 
-    fun toggleFavorite(product: ProductResponse) {
-        viewModelScope.launch {
-            val current = _favoriteIds.value.orEmpty().toMutableSet()
-            if (current.remove(product.id)) {
-                removeFavoriteUseCase(product.id)
-            } else {
-                addFavoriteUseCase(product.id)
-                current.add(product.id)
-            }
-            _favoriteIds.value = current
-            _products.value = _products.value?.filter { it.id in current }
-        }
-    }
-
     fun filterByName(query: String) {
         val q = Normalizer
             .normalize(query.trim(), Normalizer.Form.NFD)
@@ -112,23 +94,13 @@ class FavoritosViewModel @Inject constructor(
         }
     }
 
-    fun purchase(product: ProductResponse) {
-        viewModelScope.launch {
-            purchaseProductUseCase(product.id)
-            loadFavorites()
-        }
-    }
+
 
     fun removeFavorite(product: ProductResponse) {
         viewModelScope.launch {
             removeFavoriteUseCase(product.id)
             loadFavorites()
         }
-    }
-
-    fun logout() {
-        logoutUseCase()
-        _logoutEvent.value = true
     }
 
     fun resetLogoutEvent() {
