@@ -9,25 +9,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.chat.ChatMessageResponse
 import com.iesvdc.acceso.quicksales.databinding.ItemMensajeBinding
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class ChatAdapter(
     private var items: List<ChatMessageResponse>,
     private val userIdActual: Int
 ) : RecyclerView.Adapter<ChatAdapter.VH>() {
 
-    private val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    private val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
-
     inner class VH(val b: ItemMensajeBinding) : RecyclerView.ViewHolder(b.root) {
         fun bind(m: ChatMessageResponse) {
             b.tvTexto.text = m.texto
-            val horaMin = try {
-                parser.parse(m.fechaEnvio)?.let { timeFormatter.format(it) } ?: m.fechaEnvio
-            } catch (e: Exception) {
-                m.fechaEnvio
-            }
+
+            val raw = m.fechaEnvio
+            val horaMin = raw
+                .substringAfter('T')
+                .take(5)
             b.tvFecha.text = horaMin
 
             val params = b.container.layoutParams as FrameLayout.LayoutParams
@@ -46,13 +41,20 @@ class ChatAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        VH(ItemMensajeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        val binding = ItemMensajeBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return VH(binding)
+    }
 
-    override fun onBindViewHolder(holder: VH, position: Int) =
+    override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bind(items[position])
+    }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount(): Int = items.size
 
     fun updateList(newItems: List<ChatMessageResponse>) {
         items = newItems

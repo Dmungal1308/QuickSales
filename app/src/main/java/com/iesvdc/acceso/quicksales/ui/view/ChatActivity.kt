@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -19,6 +20,10 @@ import com.iesvdc.acceso.quicksales.ui.adapter.ChatAdapter
 import com.iesvdc.acceso.quicksales.ui.modelview.ChatViewModel
 import com.iesvdc.acceso.quicksales.ui.modelview.SellerViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ChatActivity : AppCompatActivity() {
@@ -36,6 +41,7 @@ class ChatActivity : AppCompatActivity() {
     private var vendedorId: Int = -1
     private var compradorId: Int = -1
     private lateinit var product: ProductResponse
+    private var pollingJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,6 +119,19 @@ class ChatActivity : AppCompatActivity() {
         }
 
         vm.iniciarSesionSessionId(sessionId)
+    }
+    override fun onStart() {
+        super.onStart()
+        pollingJob = lifecycleScope.launch {
+            while(isActive) {
+                vm.cargarMensajes()
+                delay(5_000)
+            }
+        }
+    }
+    override fun onStop() {
+        pollingJob?.cancel()
+        super.onStop()
     }
     override fun onSaveInstanceState(outState: Bundle) {
     }

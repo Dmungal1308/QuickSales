@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.iesvdc.acceso.quicksales.R
 import com.iesvdc.acceso.quicksales.data.datasource.network.models.productos.ProductResponse
 import com.iesvdc.acceso.quicksales.databinding.ActivityProductDetailBinding
@@ -34,7 +35,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private var isFav = false
     private var currentProduct: ProductResponse? = null
-    private var compradorId: Int = -1  // lo cargamos de prefs en onCreate
+    private var compradorId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +47,12 @@ class ProductDetailActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
-        // recupera compradorId de SharedPrefs
         compradorId = getSharedPreferences("SessionPrefs", MODE_PRIVATE)
             .getInt("user_id", -1)
 
         val productId = intent.getIntExtra(EXTRA_PRODUCT_ID, -1)
         if (productId < 0) return finish()
 
-        // Observa tu lista de productos y pinta solo el que toque
         menuVm.products.observe(this) { list ->
             list.find { it.id == productId }?.let { prod ->
                 currentProduct = prod
@@ -62,7 +61,6 @@ class ProductDetailActivity : AppCompatActivity() {
         }
         menuVm.loadData()
 
-        // Al confirmar compra, vuelves al menú
         menuVm.purchaseSuccess.observe(this) { success ->
             if (success) {
                 menuVm.clearPurchaseSuccess()
@@ -77,15 +75,17 @@ class ProductDetailActivity : AppCompatActivity() {
             }
         }
 
-        // Una sola flecha de “volver”
         binding.botonFlecha.setOnClickListener { finish() }
 
-        // Cuando recibas la sesión de chat, navega a ChatActivity
         chatVm.sesion.observe(this) { sesion ->
-            val i = Intent(this, ChatActivity::class.java).apply {
-                putExtra(ChatActivity.EXTRA_SESSION_ID, sesion.idSesion)
+            val prod = currentProduct ?: return@observe
+            Intent(this, ChatActivity::class.java).also {
+                it.putExtra(ChatActivity.EXTRA_SESSION_ID,    sesion.idSesion)
+                it.putExtra(ChatActivity.EXTRA_PRODUCT_JSON,  Gson().toJson(prod))
+                it.putExtra(ChatActivity.EXTRA_VENDEDOR_ID,   prod.idVendedor)
+                it.putExtra(ChatActivity.EXTRA_COMPRADOR_ID,  compradorId)
+                startActivity(it)
             }
-            startActivity(i)
         }
         chatVm.error.observe(this) { err ->
             err?.let { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
@@ -93,7 +93,6 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun bindProduct(product: ProductResponse) {
-        // Datos básicos
         binding.tvName.text        = product.nombre
         binding.tvDescription.text = product.descripcion
         binding.tvPrice.text       = "€ %.2f".format(product.precio)
@@ -102,7 +101,6 @@ class ProductDetailActivity : AppCompatActivity() {
             Glide.with(this).load(bytes).into(binding.imgProduct)
         }
 
-        // Favoritos
         menuVm.favoriteIdsLive.observe(this) { favSet ->
             isFav = favSet.contains(product.id)
             updateFavIcon()
@@ -111,7 +109,6 @@ class ProductDetailActivity : AppCompatActivity() {
             menuVm.toggleFavorite(product)
         }
 
-        // Vendedor
         sellerVm.loadUser(product.idVendedor)
         sellerVm.user.observe(this) { user ->
             binding.tvSellerUsername.text = user.nombreUsuario
@@ -121,17 +118,14 @@ class ProductDetailActivity : AppCompatActivity() {
                 ?.let { Glide.with(this).load(it).circleCrop().into(binding.imgSeller) }
         }
 
-        // Comprar
         binding.btnBuy.setOnClickListener {
             ConfirmPurchaseDialogFragment
                 .newInstance(product.id, product.nombre, product.precio.toDouble(), fromFav = false)
                 .show(supportFragmentManager, "confirm_purchase")
         }
 
-        // ¡Aquí va el CHAT!
         binding.btnChat.setOnClickListener {
             Log.d("ChatDebug", "Iniciando sesión: prod=${product.id}, vend=${product.idVendedor}, comp=$compradorId")
-            // Lanza la creación/obtención de la sesión
             chatVm.iniciarSesion(
                 prodId = product.id,
                 vendId = product.idVendedor,
