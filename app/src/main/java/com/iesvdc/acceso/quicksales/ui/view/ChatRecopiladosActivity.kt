@@ -26,6 +26,16 @@ import com.iesvdc.acceso.quicksales.ui.modelview.SettingsViewModel
 import com.iesvdc.acceso.quicksales.ui.view.dialog.LogoutConfirmationDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Activity que muestra las sesiones de chat del usuario, agrupadas por producto.
+ *
+ * Funcionalidad principal:
+ * 1. Configura DrawerLayout y ajusta márgenes según barras del sistema.
+ * 2. Configura RecyclerView con [ChatSessionsAdapter] para listar sesiones.
+ * 3. Observa LiveData de [ChatRecopiladosViewModel] para cargar y actualizar sesiones.
+ * 4. Maneja navegación dentro del menú lateral: productos, favoritos, cartera, etc.
+ * 5. Permite logout mostrando [LogoutConfirmationDialogFragment].
+ */
 @AndroidEntryPoint
 class ChatRecopiladosActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -35,25 +45,39 @@ class ChatRecopiladosActivity : AppCompatActivity() {
 
     private val settingsVm: SettingsViewModel by viewModels()
 
+    /**
+     * Se ejecuta al crear la Activity:
+     * - Infla el layout, configura DrawerLayout y padding por barras del sistema.
+     * - Inicializa RecyclerView en modo LinearLayout (versión Grid comentada).
+     * - Observa LiveData de sesiones (ChatRecopiladosViewModel.items) para poblar el adaptador.
+     * - Carga las sesiones llamando a vm.load().
+     * - Asigna listeners a botones de menú lateral y navegación entre pantallas.
+     * - Ajusta visibilidad de la opción "Usuarios" según rol de usuario (admin).
+     * - Observa perfil del usuario (SettingsViewModel.profile) para mostrar avatar en el Drawer.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatRecopiladosBinding.inflate(layoutInflater)
         setContentView(binding.root)
         drawerLayout = binding.drawerLayout
 
+        // Barra de estado en blanco con texto oscuro si la API lo soporta
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = getColor(R.color.white)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
+
+        // Ajustar padding para barras del sistema (status/navigation)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
 
+        // Inicialmente configuramos RecyclerView con GridLayout de 2 columnas (puede cambiarse)
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
 
-
+        // Observa evento de logout para redirigir a LoginActivity
         vm.logoutEvent.observe(this) {
             if (it) {
                 vm.resetLogoutEvent()
@@ -62,8 +86,10 @@ class ChatRecopiladosActivity : AppCompatActivity() {
             }
         }
 
+        // Configurar RecyclerView como lista lineal y asignar adaptador
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = ChatSessionsAdapter(emptyList()) { item ->
+            // Al hacer clic en una sesión, abre ChatActivity con los parámetros necesarios
             startActivity(Intent(this, ChatActivity::class.java).apply {
                 putExtra(ChatActivity.EXTRA_SESSION_ID,    item.session.idSesion)
                 putExtra(ChatActivity.EXTRA_PRODUCT_JSON,  Gson().toJson(item.product))
@@ -73,19 +99,19 @@ class ChatRecopiladosActivity : AppCompatActivity() {
         }
         binding.recyclerView.adapter = adapter
 
+        // Observar la lista de elementos (sesiones + producto) y actualizar el adaptador
         vm.items.observe(this) { list ->
             adapter.updateList(list)
         }
+        // Cargar las sesiones una vez
         vm.load()
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
-        vm.items.observe(this) { list ->
-            adapter.updateList(list)
-        }
-
+        // Configurar botones y opciones del menú lateral
         binding.imageButton.setOnClickListener { toggleDrawer() }
         findViewById<ImageButton>(R.id.botonFlecha).setOnClickListener { toggleDrawer() }
         findViewById<TextView>(R.id.cerrarSesion).setOnClickListener { showLogoutConfirmationDialog() }
+
+        // Navegación a otras pantallas desde el Drawer
         binding.root.findViewById<TextView>(R.id.mis_productos)
             .setOnClickListener {
                 startActivity(Intent(this, MyProductsActivity::class.java))
@@ -114,6 +140,8 @@ class ChatRecopiladosActivity : AppCompatActivity() {
             startActivity(Intent(this, PurchasedProductsActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+
+        // Mostrar opción de "Usuarios" solo si el rol del usuario es admin
         val tvUsuarios = binding.root.findViewById<TextView>(R.id.usuarios)
         settingsVm.profile.observe(this) { me ->
             tvUsuarios.visibility = if (me?.rol == "admin") View.VISIBLE else View.GONE
@@ -122,11 +150,14 @@ class ChatRecopiladosActivity : AppCompatActivity() {
             startActivity(Intent(this, UsersActivity::class.java))
             drawerLayout.closeDrawer(GravityCompat.START)
         }
+
+        // Botón home que regresa a MenuActivity y cierra esta Activity
         findViewById<ImageButton>(R.id.btnInicio).setOnClickListener {
             startActivity(Intent(this, MenuActivity::class.java))
             finish()
         }
 
+        // Observar perfil para cargar avatar en el botón de usuario y en el Drawer
         val navUserButton = binding.root.findViewById<ImageButton>(R.id.botonUsuario)
         settingsVm.profile.observe(this) { user ->
             val imageBytes = user?.imagenBase64?.let { Base64.decode(it, Base64.DEFAULT) }
@@ -145,7 +176,9 @@ class ChatRecopiladosActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Abre o cierra el drawer lateral según su estado actual.
+     */
     private fun toggleDrawer() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -153,6 +186,10 @@ class ChatRecopiladosActivity : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
     }
 
+    /**
+     * Muestra un diálogo de confirmación de logout.
+     * Si se confirma, ejecuta logout y redirige a LoginActivity.
+     */
     private fun showLogoutConfirmationDialog() {
         val dialog = LogoutConfirmationDialogFragment().apply {
             onLogoutConfirmed = {
