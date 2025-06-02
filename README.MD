@@ -1,7 +1,7 @@
 # QuickSales
 
 ## 1. Descripción general
-QuickSales es una aplicación Android de compraventa de artículos entre usuarios. Permite a cada usuario publicar productos nuevos o de segunda mano, gestionar sus anuncios, descubrir productos de otros vendedores, marcar favoritos, controlar su saldo (cartera) y comunicarse mediante un chat interno. El propósito principal es crear un entorno sencillo e intuitivo para que los usuarios puedan comprar, vender e intercambiar objetos de forma segura y eficiente.
+QuickSales es una aplicación Android de compraventa de artículos entre usuarios. Permite a cada usuario publicar productos nuevos o de segunda mano, gestionar sus anuncios, descubrir productos de otros vendedores, marcar favoritos, controlar su saldo (cartera) y comunicarse mediante un chat interno. El propósito principal es crear un entorno sencillo e intuitivo para que los usuarios puedan comprar y vender objetos de forma segura y eficiente.
 
 ---
 
