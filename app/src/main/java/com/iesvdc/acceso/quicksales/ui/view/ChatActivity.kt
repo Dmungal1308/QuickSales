@@ -59,7 +59,7 @@ class ChatActivity : AppCompatActivity() {
     private var pollingJob: Job? = null
 
     /**
-     * Método de ciclo de vida called cuando se crea la Activity.
+     * Metodo de ciclo de vida called cuando se crea la Activity.
      * - Infla layout y configura vistas estáticas (barra de estado, SharedPreferences).
      * - Recupera parámetros del Intent y valida que sean válidos.
      * - Muestra datos del producto (nombre y precio).

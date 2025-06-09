@@ -37,7 +37,7 @@ QuickSales es una aplicación Android de compraventa de artículos entre usuario
 ## 3. Instalación
 1. Clonar el repositorio:  
    ```bash
-   git clone https://turepositorio.git
+   git clone https://github.com/Dmungal1308/QuickSales.git
 
 2. Abrir el proyecto en Android Studio:
 
